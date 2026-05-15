@@ -13,7 +13,7 @@ const MainLayout = () => {
       <Navbar />
 
       {/* MAIN CONTENT */}
-      <main className="flex-1 pt-20">
+      <main className="flex-1 ">
         <Outlet />
       </main>
 
