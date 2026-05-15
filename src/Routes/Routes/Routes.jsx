@@ -7,6 +7,7 @@ import Homes from "../../Pages/Home/Homes";
 import Matches from "../../Pages/Matches/Matches";
 import PointTables from "../../Pages/PointTable/PointTables";
 import Teams from "../../Pages/Teams/Teams";
+import Dashboard from "../../Pages/Dashboards/Dashboard";
 
 
 
@@ -47,7 +48,7 @@ export const router = createBrowserRouter([
         children:[
             {
                 path: '/dashboard',
-                element: <>dashboard</>
+                element: <Dashboard/>
             },
            
         ]

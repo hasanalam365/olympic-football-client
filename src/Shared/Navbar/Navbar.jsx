@@ -77,7 +77,7 @@ export default function Navbar() {
 
             {/* ADMIN BUTTON */}
             <Link
-              to="/admin"
+              to="/dashboard"
               className="flex items-center gap-2 px-5 py-2 text-sm font-semibold text-cyan-300 transition-all duration-300 border rounded-xl border-cyan-400/30 bg-cyan-400/10 hover:bg-cyan-400/20 hover:shadow-[0_0_25px_rgba(34,211,238,0.25)]"
             >
               <LayoutDashboard size={16} />
@@ -119,7 +119,7 @@ export default function Navbar() {
 
             {/* MOBILE ADMIN BUTTON */}
             <Link
-              to="/admin"
+              to="/dashboard"
               className="flex items-center justify-center gap-2 py-3 mt-4 font-semibold border text-cyan-300 rounded-xl border-cyan-400/30 bg-cyan-400/10"
             >
               <LayoutDashboard size={18} />
