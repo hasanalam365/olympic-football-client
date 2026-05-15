@@ -14,7 +14,7 @@ export default function Navbar() {
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Matches", path: "/matches" },
-    { name: "Standings", path: "/standings" },
+    { name: "Point Table", path: "/pointTable" },
     { name: "Teams", path: "/teams" },
     { name: "Players", path: "/players" },
     { name: "News", path: "/news" },
