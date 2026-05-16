@@ -8,6 +8,9 @@ import Matches from "../../Pages/Matches/Matches";
 import PointTables from "../../Pages/PointTable/PointTables";
 import Teams from "../../Pages/Teams/Teams";
 import Dashboard from "../../Pages/Dashboards/Dashboard";
+import AdminMatches from "../../Pages/Dashboards/AdminMatches";
+import AdminTeams from "../../Pages/Dashboards/AdminTeams";
+import AdminPlayers from "../../Pages/Dashboards/AdminPlayers";
 
 
 
@@ -49,6 +52,18 @@ export const router = createBrowserRouter([
             {
                 path: '/dashboard',
                 element: <Dashboard/>
+            },
+            {
+                path: '/dashboard/matches',
+                element: <AdminMatches/>
+            },
+            {
+                path: '/dashboard/teams',
+                element: <AdminTeams/>
+            },
+            {
+                path: '/dashboard/players',
+                element: <AdminPlayers/>
             },
            
         ]

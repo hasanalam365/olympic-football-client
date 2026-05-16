@@ -12,7 +12,7 @@ import {
   X,
 } from "lucide-react";
 
-import { NavLink, Outlet } from "react-router-dom";
+import { Link, NavLink, Outlet } from "react-router-dom";
 import DashboardNav from "../../Shared/DashNav/DashNav";
 
 const sidebarLinks = [
@@ -109,12 +109,13 @@ const DashboardLayout = () => {
         {/* BOTTOM */}
         <div className="absolute bottom-0 left-0 w-full p-5 border-t border-white/5">
 
+          <Link to='/'>
           <button className="flex items-center gap-3 text-gray-400 transition-all hover:text-white">
 
             <Home size={18} />
 
             Back to Website
-          </button>
+          </button></Link>
         </div>
       </aside>
 
