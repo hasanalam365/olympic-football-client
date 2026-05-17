@@ -1,200 +1,245 @@
-// AddTeam.jsx
+import React, {
+  useState,
+} from "react";
 
-import React from "react";
+import axios from "axios";
 
-import { ArrowLeft } from "lucide-react";
+import {
+  ArrowLeft,
+  Search,
+  UserPlus,
+  X,
+} from "lucide-react";
 
-import { Link, useNavigate } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+} from "react-router-dom";
 
 import useAxiosPublic from "../Hooks/useAxiosPublic";
 
 const AddTeam = () => {
 
-  const navigate = useNavigate();
+  const navigate =
+    useNavigate();
 
-  const axiosPublic = useAxiosPublic();
+  const axiosPublic =
+    useAxiosPublic();
+
+  const [
+    players,
+    setPlayers,
+  ] = useState([]);
+
+  const [
+    selectedPlayers,
+    setSelectedPlayers,
+  ] = useState([]);
+
+  const [
+    search,
+    setSearch,
+  ] = useState("");
 
   const image_hosting_key =
-    import.meta.env.VITE_IMAGE_HOST_KEY;
+    import.meta.env
+      .VITE_IMAGE_HOST_KEY;
 
   const image_upload_url =
     `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
 
-  const handleAddTeam = async (e) => {
+  // SEARCH PLAYER
+  const handleSearch =
+    async (value) => {
 
-    e.preventDefault();
+      setSearch(value);
 
-    const form = e.target;
+      if (!value) {
 
-    const logoFile =
-      form.logo.files[0];
-
-    const bannerFile =
-      form.banner.files[0];
-
-    try {
-
-      /* =========================
-          LOGO UPLOAD
-      ========================= */
-
-      const logoData =
-        new FormData();
-
-      logoData.append(
-        "image",
-        logoFile
-      );
-
-      const logoRes =
-        await axiosPublic.post(
-          image_upload_url,
-          logoData,
-          {
-            headers: {
-              "content-type":
-                "multipart/form-data",
-            },
-          }
-        );
-
-      /* =========================
-          BANNER UPLOAD
-      ========================= */
-
-      const bannerData =
-        new FormData();
-
-      bannerData.append(
-        "image",
-        bannerFile
-      );
-
-      const bannerRes =
-        await axiosPublic.post(
-          image_upload_url,
-          bannerData,
-          {
-            headers: {
-              "content-type":
-                "multipart/form-data",
-            },
-          }
-        );
-
-      /* =========================
-          CHECK SUCCESS
-      ========================= */
-
-      if (
-        !logoRes.data.success ||
-        !bannerRes.data.success
-      ) {
-
-        alert(
-          "Image Upload Failed"
-        );
+        setPlayers([]);
 
         return;
       }
 
-      /* =========================
-          FINAL TEAM DATA
-      ========================= */
+      try {
 
-      const teamData = {
+        const res =
+          await axiosPublic.get(
+            `/teams/searchPlayers?search=${value}`
+          );
 
-        name: form.name.value,
-
-        shortName:
-          form.shortName.value,
-
-        owner:
-          form.owner.value,
-
-        
-
-        group:
-          form.group.value,
-
-        played: Number(
-          form.played.value
-        ),
-
-        win: Number(
-          form.win.value
-        ),
-
-        draw: Number(
-          form.draw.value
-        ),
-
-        lose: Number(
-          form.lose.value
-        ),
-
-        gf: Number(
-          form.gf.value
-        ),
-
-        ga: Number(
-          form.ga.value
-        ),
-
-        points: Number(
-          form.points.value
-        ),
-
-        logo:
-          logoRes.data.data
-            .display_url,
-
-        banner:
-          bannerRes.data.data
-            .display_url,
-
-        createdAt: new Date(),
-      };
-
-      /* =========================
-          SAVE TO DATABASE
-      ========================= */
-
-      const res =
-        await axiosPublic.post(
-          "/teams",
-          teamData
+        setPlayers(
+          res.data
         );
 
-      if (
-        res.data.insertedId
-      ) {
+      } catch (error) {
+
+        console.log(error);
+      }
+    };
+
+  // ADD PLAYER
+  const handleAddPlayer =
+    (player) => {
+
+      const exists =
+        selectedPlayers.find(
+          (p) =>
+            p._id ===
+            player._id
+        );
+
+      if (exists) return;
+
+      setSelectedPlayers([
+        ...selectedPlayers,
+        player,
+      ]);
+    };
+
+  // REMOVE PLAYER
+  const handleRemovePlayer =
+    (id) => {
+
+      const remaining =
+        selectedPlayers.filter(
+          (p) =>
+            p._id !== id
+        );
+
+      setSelectedPlayers(
+        remaining
+      );
+    };
+
+  // SUBMIT
+  const handleAddTeam =
+    async (e) => {
+
+      e.preventDefault();
+
+      const form =
+        e.target;
+
+      try {
+
+        let logoUrl = "";
+        let bannerUrl =
+          "";
+
+        // LOGO
+        if (
+          form.logo.files[0]
+        ) {
+
+          const logoData =
+            new FormData();
+
+          logoData.append(
+            "image",
+            form.logo.files[0]
+          );
+
+          const logoRes =
+            await axios.post(
+              image_upload_url,
+              logoData
+            );
+
+          logoUrl =
+            logoRes.data.data
+              .display_url;
+        }
+
+        // BANNER
+        if (
+          form.banner.files[0]
+        ) {
+
+          const bannerData =
+            new FormData();
+
+          bannerData.append(
+            "image",
+            form.banner.files[0]
+          );
+
+          const bannerRes =
+            await axios.post(
+              image_upload_url,
+              bannerData
+            );
+
+          bannerUrl =
+            bannerRes.data.data
+              .display_url;
+        }
+
+        // TEAM DATA
+        const teamData = {
+
+          name:
+            form.name.value,
+
+          shortName:
+            form.shortName
+              .value,
+
+          owner:
+            form.owner.value,
+
+          ownerPhone:
+            form.ownerPhone
+              .value,
+
+          group:
+            form.group.value,
+
+          logo: logoUrl,
+
+          banner:
+            bannerUrl,
+
+          players:
+            selectedPlayers,
+
+          createdAt:
+            new Date(),
+        };
+
+        const res =
+          await axiosPublic.post(
+            "/teams",
+            teamData
+          );
+
+        if (
+          res.data.insertedId
+        ) {
+
+          alert(
+            "Team Added Successfully"
+          );
+
+          navigate(
+            "/dashboard/adminTeams"
+          );
+        }
+
+      } catch (error) {
+
+        console.log(error);
 
         alert(
-          "Team Added Successfully"
-        );
-
-        form.reset();
-
-        navigate(
-          "/dashboard/adminTeams"
+          "Something went wrong"
         );
       }
-
-    } catch (error) {
-
-      console.log(error);
-
-      alert(
-        "Something went wrong"
-      );
-    }
-  };
+    };
 
   return (
     <section className="min-h-screen bg-[#030B18] text-white p-6">
 
-      {/* TOP */}
+      {/* HEADER */}
       <div className="flex items-center justify-between mb-10">
 
         <div>
@@ -204,13 +249,15 @@ const AddTeam = () => {
           </h2>
 
           <p className="mt-2 text-gray-400">
-            Create and manage tournament teams
+            Create football
+            team and add
+            players
           </p>
         </div>
 
         <Link
           to="/dashboard/adminTeams"
-          className="flex items-center gap-2 px-5 h-12 rounded-2xl border border-white/10 bg-[#071120] hover:border-cyan-400/30 transition-all"
+          className="flex items-center gap-2 px-5 h-12 rounded-2xl border border-white/10 bg-[#071120]"
         >
 
           <ArrowLeft size={18} />
@@ -220,195 +267,244 @@ const AddTeam = () => {
       </div>
 
       {/* FORM */}
-      <div className="max-w-4xl p-8 border border-cyan-400/10 rounded-3xl bg-[#071120]">
+      <div className="max-w-5xl p-8 rounded-3xl border border-cyan-400/10 bg-[#071120]">
 
         <form
           onSubmit={
             handleAddTeam
           }
-          className="space-y-6"
+          className="space-y-8"
         >
 
-          {/* BASIC INFO */}
+          {/* BASIC */}
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
 
-            <div>
+            <input
+              type="text"
+              name="name"
+              required
+              placeholder="Team Name"
+              className="w-full h-14 px-4 rounded-2xl border border-white/10 bg-[#0B1627]"
+            />
 
-              <label className="block mb-2 text-sm text-gray-300">
-                Team Name
-              </label>
+            <input
+              type="text"
+              name="shortName"
+              required
+              placeholder="Short Name"
+              className="w-full h-14 px-4 rounded-2xl border border-white/10 bg-[#0B1627]"
+            />
 
-              <input
-                type="text"
-                name="name"
-                required
-                className="w-full h-14 px-4 rounded-2xl border border-white/10 bg-[#0B1627] outline-none"
-              />
-            </div>
+            <input
+              type="text"
+              name="owner"
+              required
+              placeholder="Owner Name"
+              className="w-full h-14 px-4 rounded-2xl border border-white/10 bg-[#0B1627]"
+            />
 
-            <div>
-
-              <label className="block mb-2 text-sm text-gray-300">
-                Short Name
-              </label>
-
-              <input
-                type="text"
-                name="shortName"
-                required
-                className="w-full h-14 px-4 rounded-2xl border border-white/10 bg-[#0B1627] outline-none"
-              />
-            </div>
-
-            <div>
-
-              <label className="block mb-2 text-sm text-gray-300">
-                owner
-              </label>
-
-              <input
-                type="text"
-                name="owner"
-                required
-                className="w-full h-14 px-4 rounded-2xl border border-white/10 bg-[#0B1627] outline-none"
-              />
-            </div>
-
-           
+            <input
+              type="text"
+              name="ownerPhone"
+              required
+              placeholder="Owner Phone"
+              className="w-full h-14 px-4 rounded-2xl border border-white/10 bg-[#0B1627]"
+            />
           </div>
 
           {/* GROUP */}
-          <div>
+          <select
+            name="group"
+            className="w-full h-14 px-4 rounded-2xl border border-white/10 bg-[#0B1627]"
+          >
 
-            <label className="block mb-2 text-sm text-gray-300">
-              Group
-            </label>
+            <option>
+              Group A
+            </option>
 
-            <select
-              name="group"
-              className="w-full h-14 px-4 rounded-2xl border border-white/10 bg-[#0B1627]"
-            >
-
-              <option>
-                Group A
-              </option>
-
-              <option>
-                Group B
-              </option>
-            </select>
-          </div>
+            <option>
+              Group B
+            </option>
+          </select>
 
           {/* IMAGES */}
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
 
-            <div>
+            <input
+              type="file"
+              name="logo"
+              className="w-full p-4 rounded-2xl border border-white/10 bg-[#0B1627]"
+            />
 
-              <label className="block mb-2 text-sm text-gray-300">
-                Team Logo
-              </label>
-
-              <input
-                type="file"
-                name="logo"
-                required
-                className="w-full p-4 rounded-2xl border border-white/10 bg-[#0B1627]"
-              />
-            </div>
-
-            <div>
-
-              <label className="block mb-2 text-sm text-gray-300">
-                Team Banner
-              </label>
-
-              <input
-                type="file"
-                name="banner"
-                required
-                className="w-full p-4 rounded-2xl border border-white/10 bg-[#0B1627]"
-              />
-            </div>
+            <input
+              type="file"
+              name="banner"
+              className="w-full p-4 rounded-2xl border border-white/10 bg-[#0B1627]"
+            />
           </div>
 
-          {/* STATS */}
+          {/* SEARCH PLAYER */}
           <div>
 
             <h3 className="mb-4 text-xl font-bold">
-              Team Stats
+              Add Players
             </h3>
 
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-4 xl:grid-cols-7">
+            <div className="relative">
 
-              <input
-                type="number"
-                name="played"
-                placeholder="Played"
-                defaultValue={0}
-                className="h-14 px-4 rounded-2xl border border-white/10 bg-[#0B1627]"
+              <Search
+                className="absolute text-gray-500 left-4 top-4"
+                size={18}
               />
 
               <input
-                type="number"
-                name="win"
-                placeholder="Wins"
-                defaultValue={0}
-                className="h-14 px-4 rounded-2xl border border-white/10 bg-[#0B1627]"
+                type="text"
+                value={search}
+                onChange={(e) =>
+                  handleSearch(
+                    e.target.value
+                  )
+                }
+                placeholder="Search player by name or phone..."
+                className="w-full h-14 pl-12 pr-4 rounded-2xl border border-white/10 bg-[#0B1627]"
               />
+            </div>
 
-              <input
-                type="number"
-                name="draw"
-                placeholder="Draws"
-                defaultValue={0}
-                className="h-14 px-4 rounded-2xl border border-white/10 bg-[#0B1627]"
-              />
+            {/* SEARCH RESULT */}
+            {players.length >
+              0 && (
+              <div className="mt-4 space-y-3">
 
-              <input
-                type="number"
-                name="lose"
-                placeholder="Loses"
-                defaultValue={0}
-                className="h-14 px-4 rounded-2xl border border-white/10 bg-[#0B1627]"
-              />
+                {players.map(
+                  (player) => (
+                    <div
+                      key={
+                        player._id
+                      }
+                      className="flex items-center justify-between p-4 rounded-2xl bg-[#0B1627]"
+                    >
 
-              <input
-                type="number"
-                name="gf"
-                placeholder="GF"
-                defaultValue={0}
-                className="h-14 px-4 rounded-2xl border border-white/10 bg-[#0B1627]"
-              />
+                      <div className="flex items-center gap-4">
 
-              <input
-                type="number"
-                name="ga"
-                placeholder="GA"
-                defaultValue={0}
-                className="h-14 px-4 rounded-2xl border border-white/10 bg-[#0B1627]"
-              />
+                        <img
+                          src={
+                            player.photo
+                          }
+                          alt=""
+                          className="object-cover w-12 h-12 rounded-full"
+                        />
 
-              <input
-                type="number"
-                name="points"
-                placeholder="Points"
-                defaultValue={0}
-                className="h-14 px-4 rounded-2xl border border-white/10 bg-[#0B1627]"
-              />
+                        <div>
+
+                          <h4 className="font-semibold">
+                            {
+                              player.name
+                            }
+                          </h4>
+
+                          <p className="text-sm text-gray-400">
+                            {
+                              player.phoneNumber
+                            }
+                          </p>
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleAddPlayer(
+                            player
+                          )
+                        }
+                        className="flex items-center h-10 gap-2 px-4 font-semibold text-black rounded-xl bg-cyan-300"
+                      >
+
+                        <UserPlus
+                          size={16}
+                        />
+
+                        Add
+                      </button>
+                    </div>
+                  )
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* SELECTED */}
+          <div>
+
+            <h3 className="mb-4 text-xl font-bold">
+              Selected Players
+            </h3>
+
+            <div className="space-y-3">
+
+              {selectedPlayers.map(
+                (player) => (
+                  <div
+                    key={
+                      player._id
+                    }
+                    className="flex items-center justify-between p-4 rounded-2xl bg-[#0B1627]"
+                  >
+
+                    <div className="flex items-center gap-4">
+
+                      <img
+                        src={
+                          player.photo
+                        }
+                        alt=""
+                        className="object-cover w-12 h-12 rounded-full"
+                      />
+
+                      <div>
+
+                        <h4 className="font-semibold">
+                          {
+                            player.name
+                          }
+                        </h4>
+
+                        <p className="text-sm text-gray-400">
+                          {
+                            player.phoneNumber
+                          }
+                        </p>
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleRemovePlayer(
+                          player._id
+                        )
+                      }
+                      className="flex items-center justify-center w-10 h-10 text-red-400 rounded-xl bg-red-500/10"
+                    >
+
+                      <X
+                        size={18}
+                      />
+                    </button>
+                  </div>
+                )
+              )}
             </div>
           </div>
 
           {/* BUTTON */}
-          <div className="pt-4">
+          <button
+            type="submit"
+            className="px-8 font-bold text-black h-14 rounded-2xl bg-cyan-300"
+          >
 
-            <button
-              type="submit"
-              className="px-8 h-14 rounded-2xl bg-cyan-300 text-black font-bold hover:scale-[1.02] transition-all"
-            >
-
-              Save Team
-            </button>
-          </div>
+            Save Team
+          </button>
         </form>
       </div>
     </section>
