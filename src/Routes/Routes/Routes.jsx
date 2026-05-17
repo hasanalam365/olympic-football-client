@@ -12,6 +12,7 @@ import AdminMatches from "../../Pages/Dashboards/AdminMatches";
 import AdminTeams from "../../Pages/Dashboards/AdminTeams";
 import AdminPlayers from "../../Pages/Dashboards/AdminPlayers";
 import AddTeam from "../../Components/AddTeam";
+import AddPlayer from "../../Components/AddPlayer";
 
 
 
@@ -70,6 +71,10 @@ export const router = createBrowserRouter([
                 path: '/dashboard/addTeam',
                 element: <AddTeam/>
             },
+            {
+  path: "/dashboard/addPlayer",
+  element: <AddPlayer />,
+}
            
         ]
     }
