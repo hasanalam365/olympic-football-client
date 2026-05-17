@@ -11,6 +11,7 @@ import Dashboard from "../../Pages/Dashboards/Dashboard";
 import AdminMatches from "../../Pages/Dashboards/AdminMatches";
 import AdminTeams from "../../Pages/Dashboards/AdminTeams";
 import AdminPlayers from "../../Pages/Dashboards/AdminPlayers";
+import AddTeam from "../../Components/AddTeam";
 
 
 
@@ -64,6 +65,10 @@ export const router = createBrowserRouter([
             {
                 path: '/dashboard/players',
                 element: <AdminPlayers/>
+            },
+            {
+                path: '/dashboard/addTeam',
+                element: <AddTeam/>
             },
            
         ]
