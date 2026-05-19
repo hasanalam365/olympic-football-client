@@ -1,4 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  useEffect,
+  useState,
+} from "react";
 
 import {
   Plus,
@@ -14,6 +17,8 @@ import { Link } from "react-router-dom";
 
 import { motion } from "framer-motion";
 
+import useAxiosPublic from "../../Hooks/useAxiosPublic";
+
 const AdminTeams = () => {
   const [teams, setTeams] =
     useState([]);
@@ -24,54 +29,70 @@ const AdminTeams = () => {
   const [loading, setLoading] =
     useState(true);
 
+  const axiosPublic =
+    useAxiosPublic();
+
   /* ======================================
       GET ALL TEAMS
   ====================================== */
   useEffect(() => {
-    fetch("http://localhost:5000/teams")
-      .then((res) => res.json())
-      .then((data) => {
-        setTeams(data);
-        setLoading(false);
-      });
-  }, []);
+    const getTeams =
+      async () => {
+        try {
+          const res =
+            await axiosPublic.get(
+              "/teams"
+            );
+
+          setTeams(
+            res.data
+          );
+
+          setLoading(false);
+        } catch (error) {
+          console.log(error);
+
+          setLoading(false);
+        }
+      };
+
+    getTeams();
+  }, [axiosPublic]);
 
   /* ======================================
       DELETE TEAM
   ====================================== */
-  const handleDelete = async (
-    id
-  ) => {
-    const confirmDelete =
-      window.confirm(
-        "Delete this team?"
-      );
-
-    if (!confirmDelete) return;
-
-    try {
-      const res = await fetch(
-        `http://localhost:5000/teams/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
-
-      const data =
-        await res.json();
-
-      if (data.deletedCount > 0) {
-        setTeams(
-          teams.filter(
-            (team) =>
-              team._id !== id
-          )
+  const handleDelete =
+    async (id) => {
+      const confirmDelete =
+        window.confirm(
+          "Delete this team?"
         );
+
+      if (!confirmDelete)
+        return;
+
+      try {
+        const res =
+          await axiosPublic.delete(
+            `/teams/${id}`
+          );
+
+        if (
+          res.data.deletedCount >
+          0
+        ) {
+          setTeams(
+            teams.filter(
+              (team) =>
+                team._id !== id
+            )
+          );
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    };
 
   /* ======================================
       SEARCH FILTER
@@ -86,9 +107,9 @@ const AdminTeams = () => {
     );
 
   return (
-    <section className="min-h-screen bg-[#030B18] text-white p-6">
+    <section className="min-h-screen bg-[#030B18] text-white p-4 md:p-6">
       {/* HEADER */}
-      <div className="flex flex-col gap-6 mb-10 lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex flex-col gap-6 mb-8 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <div className="inline-flex items-center gap-2 px-4 py-2 mb-4 border rounded-full bg-cyan-400/10 border-cyan-400/20">
             <Shield
@@ -101,11 +122,11 @@ const AdminTeams = () => {
             </span>
           </div>
 
-          <h2 className="text-4xl font-black tracking-tight">
+          <h2 className="text-3xl font-black md:text-4xl">
             Team Management
           </h2>
 
-          <p className="mt-3 text-gray-400">
+          <p className="mt-3 text-sm text-gray-400 md:text-base">
             Manage all football
             tournament teams
           </p>
@@ -113,7 +134,7 @@ const AdminTeams = () => {
 
         <Link
           to="/dashboard/addTeam"
-          className="flex items-center justify-center gap-3 px-6 font-bold text-black transition-all duration-300 h-14 rounded-2xl bg-cyan-300 hover:scale-[1.03]"
+          className="flex items-center justify-center w-full gap-3 px-6 font-bold text-black transition-all duration-300 md:w-fit h-14 rounded-2xl bg-cyan-300 hover:scale-[1.03]"
         >
           <Plus size={18} />
           Add New Team
@@ -121,7 +142,7 @@ const AdminTeams = () => {
       </div>
 
       {/* TOP STATS */}
-      <div className="grid grid-cols-1 gap-5 mb-8 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 mb-8 sm:grid-cols-2 xl:grid-cols-3">
         <div className="p-6 border rounded-3xl border-white/10 bg-[#071120]">
           <div className="flex items-center justify-between">
             <div>
@@ -169,7 +190,7 @@ const AdminTeams = () => {
           </div>
         </div>
 
-        <div className="p-6 border rounded-3xl border-white/10 bg-[#071120]">
+        <div className="p-6 border rounded-3xl border-white/10 bg-[#071120] sm:col-span-2 xl:col-span-1">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-400">
@@ -216,8 +237,146 @@ const AdminTeams = () => {
         />
       </div>
 
-      {/* TABLE */}
-      <div className="overflow-hidden border border-white/10 rounded-3xl bg-[#071120]">
+      {/* =========================
+          MOBILE CARD VIEW
+      ========================== */}
+      <div className="grid grid-cols-1 gap-5 lg:hidden">
+        {filteredTeams.map(
+          (team, index) => (
+            <motion.div
+              key={team._id}
+              initial={{
+                opacity: 0,
+                y: 20,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+              }}
+              transition={{
+                delay:
+                  index * 0.05,
+              }}
+              className="p-5 border rounded-3xl border-white/10 bg-[#071120]"
+            >
+              {/* TOP */}
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 overflow-hidden border rounded-2xl border-white/10 bg-white/5">
+                  <img
+                    src={
+                      team.logo ||
+                      "https://i.ibb.co/jvY69xhW/player-icon.png"
+                    }
+                    alt={
+                      team.name
+                    }
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold">
+                    {
+                      team.name
+                    }
+                  </h3>
+
+                  <p className="text-sm text-gray-400">
+                    {
+                      team.shortName
+                    }
+                  </p>
+                </div>
+              </div>
+
+              {/* INFO */}
+              <div className="grid grid-cols-2 gap-4 mt-6">
+                <div>
+                  <p className="text-sm text-gray-500">
+                    Owner
+                  </p>
+
+                  <h4 className="mt-1 font-semibold">
+                    {
+                      team.owner
+                    }
+                  </h4>
+                </div>
+
+                <div>
+                  <p className="text-sm text-gray-500">
+                    Group
+                  </p>
+
+                  <span className="inline-block px-3 py-1 mt-1 text-sm rounded-full bg-cyan-400/10 text-cyan-300">
+                    {
+                      team.group
+                    }
+                  </span>
+                </div>
+
+                <div>
+                  <p className="text-sm text-gray-500">
+                    Players
+                  </p>
+
+                  <h4 className="mt-1 font-bold">
+                    {
+                      team.players
+                        ?.length
+                    }
+                  </h4>
+                </div>
+
+                <div>
+                  <p className="text-sm text-gray-500">
+                    Points
+                  </p>
+
+                  <h4 className="mt-1 font-bold text-cyan-300">
+                    {team.points ||
+                      0}
+                  </h4>
+                </div>
+              </div>
+
+              {/* ACTIONS */}
+              <div className="flex items-center gap-3 mt-6">
+                <Link
+                  to={`/dashboard/editTeam/${team._id}`}
+                  className="flex items-center justify-center flex-1 gap-2 font-semibold transition-all duration-300 border h-12 rounded-2xl border-white/10 bg-[#0B1627] hover:border-cyan-400/30 hover:text-cyan-300"
+                >
+                  <Pencil
+                    size={18}
+                  />
+
+                  Edit
+                </Link>
+
+                <button
+                  onClick={() =>
+                    handleDelete(
+                      team._id
+                    )
+                  }
+                  className="flex items-center justify-center flex-1 gap-2 font-semibold transition-all duration-300 border h-12 rounded-2xl border-white/10 bg-[#0B1627] hover:border-red-500/30 hover:text-red-400"
+                >
+                  <Trash2
+                    size={18}
+                  />
+
+                  Delete
+                </button>
+              </div>
+            </motion.div>
+          )
+        )}
+      </div>
+
+      {/* =========================
+          DESKTOP TABLE
+      ========================== */}
+      <div className="hidden overflow-hidden border lg:block border-white/10 rounded-3xl bg-[#071120]">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[1000px]">
             <thead className="bg-cyan-400/5">
@@ -275,7 +434,6 @@ const AdminTeams = () => {
                     }}
                     className="border-b border-white/5 hover:bg-cyan-400/5"
                   >
-                    {/* TEAM */}
                     <td className="px-6 py-5">
                       <div className="flex items-center gap-4">
                         <div className="overflow-hidden border rounded-2xl w-14 h-14 border-white/10 bg-white/5">
@@ -307,7 +465,6 @@ const AdminTeams = () => {
                       </div>
                     </td>
 
-                    {/* OWNER */}
                     <td className="px-6 py-5">
                       <div>
                         <p className="font-medium">
@@ -324,8 +481,7 @@ const AdminTeams = () => {
                       </div>
                     </td>
 
-                    {/* GROUP */}
-                    <td className="px-6 py-5">
+                    <td className="">
                       <span className="px-4 py-2 text-sm rounded-full bg-cyan-400/10 text-cyan-300">
                         {
                           team.group
@@ -333,7 +489,6 @@ const AdminTeams = () => {
                       </span>
                     </td>
 
-                    {/* PLAYERS */}
                     <td className="px-6 py-5">
                       {
                         team.players
@@ -341,7 +496,6 @@ const AdminTeams = () => {
                       }
                     </td>
 
-                    {/* POINTS */}
                     <td className="px-6 py-5">
                       <span className="font-bold text-cyan-300">
                         {team.points ||
@@ -349,14 +503,12 @@ const AdminTeams = () => {
                       </span>
                     </td>
 
-                    {/* CREATED */}
                     <td className="px-6 py-5 text-gray-400">
                       {new Date(
                         team.createdAt
                       ).toLocaleDateString()}
                     </td>
 
-                    {/* ACTIONS */}
                     <td className="px-6 py-5">
                       <div className="flex items-center justify-end gap-3">
                         <Link

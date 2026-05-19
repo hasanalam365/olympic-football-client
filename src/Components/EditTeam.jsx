@@ -376,8 +376,8 @@ const EditTeam = () => {
               />
             </div>
   {/* SEARCH PLAYER */}
-          <div className="p-8 mt-4 border border-white/10 rounded-3xl bg-[#071120]">
-            <div className="flex items-center gap-3 mb-6">
+          <div className=" mt-4 border border-white/10 rounded-3xl bg-[#071120]">
+            <div className="flex items-center gap-3 p-6 mb-6">
               <Users className="text-cyan-300" />
 
               <h3 className="text-2xl font-black">
