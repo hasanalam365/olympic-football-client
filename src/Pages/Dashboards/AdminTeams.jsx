@@ -1,38 +1,47 @@
-// AdminTeams.jsx
-
 import React, { useEffect, useState } from "react";
 
 import {
   Plus,
   Pencil,
   Trash2,
+  Search,
+  Users,
   Shield,
+  Trophy,
 } from "lucide-react";
-
-import { motion } from "framer-motion";
 
 import { Link } from "react-router-dom";
 
-const AdminTeams = () => {
+import { motion } from "framer-motion";
 
-  const [teams, setTeams] = useState([]);
+const AdminTeams = () => {
+  const [teams, setTeams] =
+    useState([]);
+
+  const [search, setSearch] =
+    useState("");
+
+  const [loading, setLoading] =
+    useState(true);
 
   /* ======================================
       GET ALL TEAMS
   ====================================== */
   useEffect(() => {
-
     fetch("http://localhost:5000/teams")
       .then((res) => res.json())
-      .then((data) => setTeams(data));
-
+      .then((data) => {
+        setTeams(data);
+        setLoading(false);
+      });
   }, []);
 
   /* ======================================
       DELETE TEAM
   ====================================== */
-  const handleDelete = async (id) => {
-
+  const handleDelete = async (
+    id
+  ) => {
     const confirmDelete =
       window.confirm(
         "Delete this team?"
@@ -41,7 +50,6 @@ const AdminTeams = () => {
     if (!confirmDelete) return;
 
     try {
-
       const res = await fetch(
         `http://localhost:5000/teams/${id}`,
         {
@@ -53,7 +61,6 @@ const AdminTeams = () => {
         await res.json();
 
       if (data.deletedCount > 0) {
-
         setTeams(
           teams.filter(
             (team) =>
@@ -61,203 +68,346 @@ const AdminTeams = () => {
           )
         );
       }
-
     } catch (error) {
-
       console.log(error);
     }
   };
 
+  /* ======================================
+      SEARCH FILTER
+  ====================================== */
+  const filteredTeams =
+    teams.filter((team) =>
+      team.name
+        .toLowerCase()
+        .includes(
+          search.toLowerCase()
+        )
+    );
+
   return (
     <section className="min-h-screen bg-[#030B18] text-white p-6">
-
       {/* HEADER */}
-      <div className="flex flex-col gap-5 mb-10 md:flex-row md:items-center md:justify-between">
-
-        {/* LEFT */}
+      <div className="flex flex-col gap-6 mb-10 lg:flex-row lg:items-center lg:justify-between">
         <div>
+          <div className="inline-flex items-center gap-2 px-4 py-2 mb-4 border rounded-full bg-cyan-400/10 border-cyan-400/20">
+            <Shield
+              size={16}
+              className="text-cyan-300"
+            />
 
-          <h2 className="text-4xl font-extrabold tracking-tight text-white">
-            Teams
+            <span className="text-sm text-cyan-200">
+              Tournament Admin
+            </span>
+          </div>
+
+          <h2 className="text-4xl font-black tracking-tight">
+            Team Management
           </h2>
 
-          <p className="mt-2 text-gray-400">
-            Manage teams and standings
+          <p className="mt-3 text-gray-400">
+            Manage all football
+            tournament teams
           </p>
         </div>
 
-        {/* ADD BUTTON */}
         <Link
           to="/dashboard/addTeam"
-          className="flex items-center justify-center gap-3 px-6 text-sm font-bold text-black transition-all duration-300 h-14 rounded-2xl bg-cyan-300 hover:scale-[1.03] hover:shadow-[0_0_30px_rgba(103,232,249,0.35)]"
+          className="flex items-center justify-center gap-3 px-6 font-bold text-black transition-all duration-300 h-14 rounded-2xl bg-cyan-300 hover:scale-[1.03]"
         >
-
           <Plus size={18} />
-
-          Add Team
+          Add New Team
         </Link>
       </div>
 
-      {/* GRID */}
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+      {/* TOP STATS */}
+      <div className="grid grid-cols-1 gap-5 mb-8 md:grid-cols-3">
+        <div className="p-6 border rounded-3xl border-white/10 bg-[#071120]">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-gray-400">
+                Total Teams
+              </p>
 
-        {teams.map(
-          (team, index) => (
-            <motion.div
-              key={team._id}
-              initial={{
-                opacity: 0,
-                y: 30,
-              }}
-              whileInView={{
-                opacity: 1,
-                y: 0,
-              }}
-              transition={{
-                duration: 0.45,
-                delay:
-                  index * 0.06,
-              }}
-              viewport={{
-                once: true,
-              }}
-              className="group relative overflow-hidden rounded-2xl border border-cyan-400/10 bg-[#071120] p-6 transition-all duration-500 hover:border-cyan-400/30 hover:shadow-[0_0_35px_rgba(34,211,238,0.10)]"
-            >
+              <h2 className="mt-2 text-3xl font-black">
+                {teams.length}
+              </h2>
+            </div>
 
-              {/* GLOW */}
-              <div className="absolute top-0 right-0 w-40 h-40 transition-all duration-500 rounded-full opacity-0 blur-3xl bg-cyan-400/10 group-hover:opacity-100" />
+            <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-cyan-400/10">
+              <Users className="text-cyan-300" />
+            </div>
+          </div>
+        </div>
 
-              {/* TOP */}
-              <div className="flex items-start gap-4">
+        <div className="p-6 border rounded-3xl border-white/10 bg-[#071120]">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-gray-400">
+                Total Players
+              </p>
 
-                {/* LOGO */}
-                <div className="overflow-hidden rounded-2xl w-14 h-14 bg-white/10">
+              <h2 className="mt-2 text-3xl font-black">
+                {teams.reduce(
+                  (
+                    total,
+                    team
+                  ) =>
+                    total +
+                    (
+                      team.players
+                        ?.length || 0
+                    ),
+                  0
+                )}
+              </h2>
+            </div>
 
-                  <img
-                    src={team.logo}
-                    alt={team.name}
-                    className="object-cover w-full h-full"
-                  />
-                </div>
+            <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-cyan-400/10">
+              <Shield className="text-cyan-300" />
+            </div>
+          </div>
+        </div>
 
-                {/* INFO */}
-                <div>
+        <div className="p-6 border rounded-3xl border-white/10 bg-[#071120]">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-gray-400">
+                Active Groups
+              </p>
 
-                  <h3 className="text-xl font-bold text-white transition-all duration-300 group-hover:text-cyan-300">
-                    {team.name}
-                  </h3>
+              <h2 className="mt-2 text-3xl font-black">
+                {
+                  [
+                    ...new Set(
+                      teams.map(
+                        (
+                          team
+                        ) =>
+                          team.group
+                      )
+                    ),
+                  ].length
+                }
+              </h2>
+            </div>
 
-                  <p className="mt-1 text-sm text-gray-500">
-                    {team.group} •{" "}
-                    {
-                      team.formation
-                    }
-                  </p>
-                </div>
-              </div>
-
-              {/* STATS */}
-              <div className="mt-6">
-
-                <p className="text-sm text-gray-400">
-
-                  P
-                  {
-                    team.played
-                  }
-
-                  {" "}W
-                  {
-                    team.win
-                  }
-
-                  {" "}D
-                  {
-                    team.draw
-                  }
-
-                  {" "}L
-                  {
-                    team.lose
-                  }
-
-                  <span className="ml-2 font-bold text-cyan-300">
-                    {
-                      team.points
-                    }
-                    pts
-                  </span>
-                </p>
-              </div>
-
-              {/* ACTIONS */}
-              <div className="flex items-center gap-3 mt-6">
-
-                {/* EDIT */}
-                <button className="flex items-center justify-center w-11 h-11 rounded-xl border border-white/10 bg-[#0B1627] transition-all duration-300 hover:border-cyan-400/30 hover:text-cyan-300">
-
-                  <Pencil size={17} />
-                </button>
-
-                {/* DELETE */}
-                <button
-                  onClick={() =>
-                    handleDelete(
-                      team._id
-                    )
-                  }
-                  className="flex items-center justify-center w-11 h-11 rounded-xl border border-white/10 bg-[#0B1627] transition-all duration-300 hover:border-red-500/30 hover:text-red-400"
-                >
-
-                  <Trash2 size={17} />
-                </button>
-
-                {/* EXTRA ICON */}
-                <div className="ml-auto">
-
-                  <Shield
-                    size={18}
-                    className="text-cyan-400/60"
-                  />
-                </div>
-              </div>
-            </motion.div>
-          )
-        )}
+            <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-cyan-400/10">
+              <Trophy className="text-cyan-300" />
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* EMPTY STATE */}
-      {teams.length === 0 && (
+      {/* SEARCH */}
+      <div className="relative mb-8">
+        <Search className="absolute text-gray-500 -translate-y-1/2 left-5 top-1/2" />
 
-        <div className="flex flex-col items-center justify-center py-24 text-center">
+        <input
+          type="text"
+          placeholder="Search team..."
+          value={search}
+          onChange={(e) =>
+            setSearch(
+              e.target.value
+            )
+          }
+          className="w-full h-14 rounded-2xl border border-white/10 bg-[#071120] px-14 outline-none focus:border-cyan-400/40"
+        />
+      </div>
 
-          <div className="flex items-center justify-center w-24 h-24 mb-6 rounded-full bg-cyan-400/10">
+      {/* TABLE */}
+      <div className="overflow-hidden border border-white/10 rounded-3xl bg-[#071120]">
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[1000px]">
+            <thead className="bg-cyan-400/5">
+              <tr className="text-left border-b border-white/10">
+                <th className="px-6 py-5">
+                  Team
+                </th>
 
-            <Shield
-              size={40}
-              className="text-cyan-300"
-            />
-          </div>
+                <th className="px-6 py-5">
+                  Owner
+                </th>
 
-          <h3 className="text-2xl font-bold text-white">
-            No Teams Found
-          </h3>
+                <th className="px-6 py-5">
+                  Group
+                </th>
 
-          <p className="mt-3 text-gray-400">
-            Start by creating your first tournament team
-          </p>
+                <th className="px-6 py-5">
+                  Players
+                </th>
 
-          <Link
-            to="/dashboard/addTeam"
-            className="flex items-center gap-3 px-6 mt-8 text-sm font-bold text-black transition-all duration-300 h-14 rounded-2xl bg-cyan-300 hover:scale-[1.03]"
-          >
+                <th className="px-6 py-5">
+                  Points
+                </th>
 
-            <Plus size={18} />
+                <th className="px-6 py-5">
+                  Created
+                </th>
 
-            Add First Team
-          </Link>
+                <th className="px-6 py-5 text-right">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {filteredTeams.map(
+                (
+                  team,
+                  index
+                ) => (
+                  <motion.tr
+                    key={team._id}
+                    initial={{
+                      opacity: 0,
+                      y: 20,
+                    }}
+                    animate={{
+                      opacity: 1,
+                      y: 0,
+                    }}
+                    transition={{
+                      delay:
+                        index *
+                        0.05,
+                    }}
+                    className="border-b border-white/5 hover:bg-cyan-400/5"
+                  >
+                    {/* TEAM */}
+                    <td className="px-6 py-5">
+                      <div className="flex items-center gap-4">
+                        <div className="overflow-hidden border rounded-2xl w-14 h-14 border-white/10 bg-white/5">
+                          <img
+                            src={
+                              team.logo ||
+                              "https://i.ibb.co/jvY69xhW/player-icon.png"
+                            }
+                            alt={
+                              team.name
+                            }
+                            className="object-cover w-full h-full"
+                          />
+                        </div>
+
+                        <div>
+                          <h3 className="text-lg font-bold">
+                            {
+                              team.name
+                            }
+                          </h3>
+
+                          <p className="text-sm text-gray-500">
+                            {
+                              team.shortName
+                            }
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+
+                    {/* OWNER */}
+                    <td className="px-6 py-5">
+                      <div>
+                        <p className="font-medium">
+                          {
+                            team.owner
+                          }
+                        </p>
+
+                        <p className="text-sm text-gray-500">
+                          {
+                            team.ownerPhone
+                          }
+                        </p>
+                      </div>
+                    </td>
+
+                    {/* GROUP */}
+                    <td className="px-6 py-5">
+                      <span className="px-4 py-2 text-sm rounded-full bg-cyan-400/10 text-cyan-300">
+                        {
+                          team.group
+                        }
+                      </span>
+                    </td>
+
+                    {/* PLAYERS */}
+                    <td className="px-6 py-5">
+                      {
+                        team.players
+                          ?.length
+                      }
+                    </td>
+
+                    {/* POINTS */}
+                    <td className="px-6 py-5">
+                      <span className="font-bold text-cyan-300">
+                        {team.points ||
+                          0}
+                      </span>
+                    </td>
+
+                    {/* CREATED */}
+                    <td className="px-6 py-5 text-gray-400">
+                      {new Date(
+                        team.createdAt
+                      ).toLocaleDateString()}
+                    </td>
+
+                    {/* ACTIONS */}
+                    <td className="px-6 py-5">
+                      <div className="flex items-center justify-end gap-3">
+                        <Link
+                          to={`/dashboard/editTeam/${team._id}`}
+                          className="flex items-center justify-center transition-all duration-300 border w-11 h-11 rounded-xl border-white/10 bg-[#0B1627] hover:border-cyan-400/30 hover:text-cyan-300"
+                        >
+                          <Pencil
+                            size={
+                              18
+                            }
+                          />
+                        </Link>
+
+                        <button
+                          onClick={() =>
+                            handleDelete(
+                              team._id
+                            )
+                          }
+                          className="flex items-center justify-center transition-all duration-300 border w-11 h-11 rounded-xl border-white/10 bg-[#0B1627] hover:border-red-500/30 hover:text-red-400"
+                        >
+                          <Trash2
+                            size={
+                              18
+                            }
+                          />
+                        </button>
+                      </div>
+                    </td>
+                  </motion.tr>
+                )
+              )}
+            </tbody>
+          </table>
         </div>
-      )}
+      </div>
+
+      {/* EMPTY */}
+      {!loading &&
+        filteredTeams.length ===
+          0 && (
+          <div className="py-24 text-center">
+            <h2 className="text-3xl font-black">
+              No Teams Found
+            </h2>
+
+            <p className="mt-3 text-gray-400">
+              Try another search
+            </p>
+          </div>
+        )}
     </section>
   );
 };

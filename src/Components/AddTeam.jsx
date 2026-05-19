@@ -17,6 +17,7 @@ import {
 } from "react-router-dom";
 
 import useAxiosPublic from "../Hooks/useAxiosPublic";
+import { toast } from "react-toastify";
 
 const AddTeam = () => {
 
@@ -217,13 +218,11 @@ const AddTeam = () => {
           res.data.insertedId
         ) {
 
-          alert(
-            "Team Added Successfully"
-          );
-
-          navigate(
-            "/dashboard/adminTeams"
-          );
+          toast('Team add successfully')
+ form.reset();
+          // navigate(
+          //   "/dashboard/adminTeams"
+          // );
         }
 
       } catch (error) {

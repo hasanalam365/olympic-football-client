@@ -15,6 +15,7 @@ import {
 } from "react-router-dom";
 
 import useAxiosPublic from "../Hooks/useAxiosPublic";
+import { toast } from "react-toastify";
 
 const AddPlayer = () => {
 
@@ -145,15 +146,14 @@ const AddPlayer = () => {
           res.data.insertedId
         ) {
 
-          alert(
-            "Player Added Successfully"
-          );
+        
 
+          toast('Player add successfully')
           form.reset();
 
-          navigate(
-            "/dashboard/adminPlayers"
-          );
+          // navigate(
+          //   "/dashboard/adminPlayers"
+          // );
         }
 
       } catch (error) {
