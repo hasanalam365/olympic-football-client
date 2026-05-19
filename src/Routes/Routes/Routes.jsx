@@ -14,6 +14,7 @@ import AdminPlayers from "../../Pages/Dashboards/AdminPlayers";
 import AddTeam from "../../Components/AddTeam";
 import AddPlayer from "../../Components/AddPlayer";
 import EditTeam from "../../Components/EditTeam";
+import EditPlayer from "../../Components/EditPlayer";
 
 
 
@@ -79,6 +80,10 @@ export const router = createBrowserRouter([
             {
   path: "/dashboard/addPlayer",
   element: <AddPlayer />,
+},
+{
+    path: "/dashboard/editPlayer/:id",
+    element: <EditPlayer/>
 }
            
         ]
