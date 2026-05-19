@@ -234,7 +234,7 @@ const EditTeam = () => {
       {/* TOP */}
       <div className="flex items-center gap-4 mb-8">
         <Link
-          to="/dashboard/adminTeams"
+          to="/dashboard/teams"
           className="flex items-center justify-center border w-12 h-12 rounded-2xl border-white/10 bg-[#071120]"
         >
           <ArrowLeft />

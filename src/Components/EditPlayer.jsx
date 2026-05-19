@@ -221,7 +221,7 @@ const EditPlayer = () => {
 
         {/* BACK */}
         <Link
-          to="/dashboard/adminPlayers"
+          to="/dashboard/players"
           className="flex items-center justify-center gap-2 px-5 h-12 rounded-2xl border border-white/10 bg-[#071120] hover:border-cyan-400/30 transition-all"
         >
           <ArrowLeft

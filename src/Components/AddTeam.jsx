@@ -255,7 +255,7 @@ const AddTeam = () => {
         </div>
 
         <Link
-          to="/dashboard/adminTeams"
+          to="/dashboard/teams"
           className="flex items-center gap-2 px-5 h-12 rounded-2xl border border-white/10 bg-[#071120]"
         >
 
