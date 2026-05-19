@@ -375,16 +375,8 @@ const EditTeam = () => {
                 className="w-full h-14 px-5 border rounded-2xl border-white/10 bg-[#0B1627]"
               />
             </div>
-
-            {/* SAVE */}
-            <button className="flex items-center justify-center gap-3 px-6 mt-8 font-bold text-black transition-all duration-300 h-14 rounded-2xl bg-cyan-300 hover:scale-[1.02]">
-              <Save size={18} />
-              Save Changes
-            </button>
-          </form>
-
-          {/* SEARCH PLAYER */}
-          <div className="p-8 border border-white/10 rounded-3xl bg-[#071120]">
+  {/* SEARCH PLAYER */}
+          <div className="p-8 mt-4 border border-white/10 rounded-3xl bg-[#071120]">
             <div className="flex items-center gap-3 mb-6">
               <Users className="text-cyan-300" />
 
@@ -415,7 +407,7 @@ const EditTeam = () => {
             {/* SEARCH RESULT */}
             {players.length >
               0 && (
-              <div className="mt-6 space-y-3">
+              <div className="pt-2 mt-6 space-y-3">
                 {players.map(
                   (player) => (
                     <div
@@ -469,6 +461,14 @@ const EditTeam = () => {
               </div>
             )}
           </div>
+            {/* SAVE */}
+            <button className="flex items-center justify-center gap-3 px-6 mt-8 font-bold text-black transition-all duration-300 h-14 rounded-2xl bg-cyan-300 hover:scale-[1.02]">
+              <Save size={18} />
+              Save Changes
+            </button>
+          </form>
+
+        
         </div>
 
         {/* RIGHT */}
