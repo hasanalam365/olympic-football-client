@@ -3,12 +3,9 @@ import React, {
   useState,
 } from "react";
 
-import axios from "axios";
-
 import {
   ArrowLeft,
   Save,
-  Shield,
   Users,
   Search,
   UserPlus,
@@ -56,20 +53,33 @@ const EditTeam = () => {
       GET SINGLE TEAM
   ====================================== */
   useEffect(() => {
-    fetch(
-      `http://localhost:5000/teams/${id}`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        setTeam(data);
+    const getTeam =
+      async () => {
+        try {
+          const res =
+            await axiosPublic.get(
+              `/teams/${id}`
+            );
 
-        setSelectedPlayers(
-          data.players || []
-        );
+          setTeam(
+            res.data
+          );
 
-        setLoading(false);
-      });
-  }, [id]);
+          setSelectedPlayers(
+            res.data.players ||
+              []
+          );
+
+          setLoading(false);
+        } catch (error) {
+          console.log(error);
+
+          setLoading(false);
+        }
+      };
+
+    getTeam();
+  }, [id, axiosPublic]);
 
   /* ======================================
       SEARCH PLAYER
@@ -185,27 +195,13 @@ const EditTeam = () => {
 
       try {
         const res =
-          await fetch(
-            `http://localhost:5000/teams/${id}`,
-            {
-              method: "PATCH",
-
-              headers: {
-                "content-type":
-                  "application/json",
-              },
-
-              body: JSON.stringify(
-                updatedTeam
-              ),
-            }
+          await axiosPublic.patch(
+            `/teams/${id}`,
+            updatedTeam
           );
 
-        const data =
-          await res.json();
-
         if (
-          data.modifiedCount >
+          res.data.modifiedCount >
           0
         ) {
           toast.success(
@@ -218,6 +214,10 @@ const EditTeam = () => {
         }
       } catch (error) {
         console.log(error);
+
+        toast.error(
+          "Failed to update team"
+        );
       }
     };
 
@@ -230,18 +230,18 @@ const EditTeam = () => {
   }
 
   return (
-    <section className="min-h-screen bg-[#030B18] text-white p-6">
+    <section className="min-h-screen bg-[#030B18] text-white p-4 md:p-6">
       {/* TOP */}
-      <div className="flex items-center gap-4 mb-8">
+      <div className="flex flex-col gap-4 mb-8 sm:flex-row sm:items-center">
         <Link
-          to="/dashboard/teams"
+          to="/dashboard/adminTeams"
           className="flex items-center justify-center border w-12 h-12 rounded-2xl border-white/10 bg-[#071120]"
         >
           <ArrowLeft />
         </Link>
 
         <div>
-          <h2 className="text-4xl font-black">
+          <h2 className="text-3xl font-black md:text-4xl">
             Edit Team
           </h2>
 
@@ -260,7 +260,7 @@ const EditTeam = () => {
             onSubmit={
               handleUpdate
             }
-            className="p-8 border border-white/10 rounded-3xl bg-[#071120]"
+            className="p-5 border md:p-8 border-white/10 rounded-3xl bg-[#071120]"
           >
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               {/* TEAM NAME */}
@@ -273,9 +273,9 @@ const EditTeam = () => {
                   type="text"
                   name="name"
                   defaultValue={
-                    team.name
+                    team?.name
                   }
-                  className="w-full h-14 px-5 border rounded-2xl border-white/10 bg-[#0B1627]"
+                  className="w-full h-14 px-5 border rounded-2xl border-white/10 bg-[#0B1627] outline-none"
                 />
               </div>
 
@@ -289,9 +289,9 @@ const EditTeam = () => {
                   type="text"
                   name="shortName"
                   defaultValue={
-                    team.shortName
+                    team?.shortName
                   }
-                  className="w-full h-14 px-5 border rounded-2xl border-white/10 bg-[#0B1627]"
+                  className="w-full h-14 px-5 border rounded-2xl border-white/10 bg-[#0B1627] outline-none"
                 />
               </div>
 
@@ -305,9 +305,9 @@ const EditTeam = () => {
                   type="text"
                   name="owner"
                   defaultValue={
-                    team.owner
+                    team?.owner
                   }
-                  className="w-full h-14 px-5 border rounded-2xl border-white/10 bg-[#0B1627]"
+                  className="w-full h-14 px-5 border rounded-2xl border-white/10 bg-[#0B1627] outline-none"
                 />
               </div>
 
@@ -321,9 +321,9 @@ const EditTeam = () => {
                   type="text"
                   name="ownerPhone"
                   defaultValue={
-                    team.ownerPhone
+                    team?.ownerPhone
                   }
-                  className="w-full h-14 px-5 border rounded-2xl border-white/10 bg-[#0B1627]"
+                  className="w-full h-14 px-5 border rounded-2xl border-white/10 bg-[#0B1627] outline-none"
                 />
               </div>
 
@@ -337,9 +337,9 @@ const EditTeam = () => {
                   type="text"
                   name="group"
                   defaultValue={
-                    team.group
+                    team?.group
                   }
-                  className="w-full h-14 px-5 border rounded-2xl border-white/10 bg-[#0B1627]"
+                  className="w-full h-14 px-5 border rounded-2xl border-white/10 bg-[#0B1627] outline-none"
                 />
               </div>
 
@@ -353,9 +353,9 @@ const EditTeam = () => {
                   type="text"
                   name="logo"
                   defaultValue={
-                    team.logo
+                    team?.logo
                   }
-                  className="w-full h-14 px-5 border rounded-2xl border-white/10 bg-[#0B1627]"
+                  className="w-full h-14 px-5 border rounded-2xl border-white/10 bg-[#0B1627] outline-none"
                 />
               </div>
             </div>
@@ -370,105 +370,108 @@ const EditTeam = () => {
                 type="text"
                 name="banner"
                 defaultValue={
-                  team.banner
+                  team?.banner
                 }
-                className="w-full h-14 px-5 border rounded-2xl border-white/10 bg-[#0B1627]"
-              />
-            </div>
-  {/* SEARCH PLAYER */}
-          <div className=" mt-4 border border-white/10 rounded-3xl bg-[#071120]">
-            <div className="flex items-center gap-3 p-6 mb-6">
-              <Users className="text-cyan-300" />
-
-              <h3 className="text-2xl font-black">
-                Manage Players
-              </h3>
-            </div>
-
-            <div className="relative">
-              <Search
-                className="absolute text-gray-500 left-4 top-4"
-                size={18}
-              />
-
-              <input
-                type="text"
-                value={search}
-                onChange={(e) =>
-                  handleSearch(
-                    e.target.value
-                  )
-                }
-                placeholder="Search player by name or phone..."
-                className="w-full h-14 pl-12 pr-4 border rounded-2xl border-white/10 bg-[#0B1627]"
+                className="w-full h-14 px-5 border rounded-2xl border-white/10 bg-[#0B1627] outline-none"
               />
             </div>
 
-            {/* SEARCH RESULT */}
-            {players.length >
-              0 && (
-              <div className="pt-2 mt-6 space-y-3">
-                {players.map(
-                  (player) => (
-                    <div
-                      key={
-                        player._id
-                      }
-                      className="flex items-center justify-between p-4 border rounded-2xl border-white/10 bg-[#0B1627]"
-                    >
-                      <div className="flex items-center gap-4">
-                        <img
-                          src={
-                            player.photo
-                          }
-                          alt=""
-                          className="object-cover w-12 h-12 rounded-full"
-                        />
+            {/* SEARCH PLAYER */}
+            <div className="mt-8 border border-white/10 rounded-3xl bg-[#071120] p-4 md:p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <Users className="text-cyan-300" />
 
-                        <div>
-                          <h4 className="font-semibold">
-                            {
-                              player.name
-                            }
-                          </h4>
-
-                          <p className="text-sm text-gray-400">
-                            {
-                              player.phoneNumber
-                            }
-                          </p>
-                        </div>
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={() =>
-                          handleAddPlayer(
-                            player
-                          )
-                        }
-                        className="flex items-center gap-2 px-4 font-semibold text-black h-11 rounded-xl bg-cyan-300"
-                      >
-                        <UserPlus
-                          size={16}
-                        />
-
-                        Add
-                      </button>
-                    </div>
-                  )
-                )}
+                <h3 className="text-xl font-black md:text-2xl">
+                  Manage Players
+                </h3>
               </div>
-            )}
-          </div>
+
+              <div className="relative">
+                <Search
+                  className="absolute text-gray-500 left-4 top-4"
+                  size={18}
+                />
+
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) =>
+                    handleSearch(
+                      e.target.value
+                    )
+                  }
+                  placeholder="Search player..."
+                  className="w-full h-14 pl-12 pr-4 border rounded-2xl border-white/10 bg-[#0B1627] outline-none"
+                />
+              </div>
+
+              {/* SEARCH RESULT */}
+              {players.length >
+                0 && (
+                <div className="pt-2 mt-6 space-y-3">
+                  {players.map(
+                    (
+                      player
+                    ) => (
+                      <div
+                        key={
+                          player._id
+                        }
+                        className="flex flex-col gap-4 p-4 border sm:flex-row sm:items-center sm:justify-between rounded-2xl border-white/10 bg-[#0B1627]"
+                      >
+                        <div className="flex items-center gap-4">
+                          <img
+                            src={
+                              player.photo
+                            }
+                            alt=""
+                            className="object-cover w-12 h-12 rounded-full"
+                          />
+
+                          <div>
+                            <h4 className="font-semibold">
+                              {
+                                player.name
+                              }
+                            </h4>
+
+                            <p className="text-sm text-gray-400">
+                              {
+                                player.phoneNumber
+                              }
+                            </p>
+                          </div>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleAddPlayer(
+                              player
+                            )
+                          }
+                          className="flex items-center justify-center gap-2 px-4 font-semibold text-black transition-all h-11 rounded-xl bg-cyan-300 hover:scale-[1.02]"
+                        >
+                          <UserPlus
+                            size={16}
+                          />
+
+                          Add
+                        </button>
+                      </div>
+                    )
+                  )}
+                </div>
+              )}
+            </div>
+
             {/* SAVE */}
-            <button className="flex items-center justify-center gap-3 px-6 mt-8 font-bold text-black transition-all duration-300 h-14 rounded-2xl bg-cyan-300 hover:scale-[1.02]">
+            <button className="flex items-center justify-center w-full gap-3 px-6 mt-8 font-bold text-black transition-all duration-300 sm:w-auto h-14 rounded-2xl bg-cyan-300 hover:scale-[1.02]">
               <Save size={18} />
+
               Save Changes
             </button>
           </form>
-
-        
         </div>
 
         {/* RIGHT */}
@@ -479,7 +482,7 @@ const EditTeam = () => {
               <div className="overflow-hidden border rounded-3xl w-28 h-28 border-white/10">
                 <img
                   src={
-                    team.logo ||
+                    team?.logo ||
                     "https://i.ibb.co/jvY69xhW/player-icon.png"
                   }
                   alt=""
@@ -488,12 +491,12 @@ const EditTeam = () => {
               </div>
 
               <h2 className="mt-5 text-2xl font-black">
-                {team.name}
+                {team?.name}
               </h2>
 
               <p className="mt-2 text-gray-400">
                 {
-                  team.group
+                  team?.group
                 }
               </p>
             </div>
@@ -501,7 +504,7 @@ const EditTeam = () => {
 
           {/* SELECTED PLAYERS */}
           <div className="p-6 border border-white/10 rounded-3xl bg-[#071120]">
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex flex-col gap-4 mb-6 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-3">
                 <Users className="text-cyan-300" />
 
@@ -520,7 +523,9 @@ const EditTeam = () => {
 
             <div className="space-y-4 max-h-[700px] overflow-y-auto pr-2">
               {selectedPlayers.map(
-                (player) => (
+                (
+                  player
+                ) => (
                   <div
                     key={
                       player._id
@@ -537,14 +542,14 @@ const EditTeam = () => {
                       />
                     </div>
 
-                    <div>
-                      <h4 className="font-bold">
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-bold truncate">
                         {
                           player.name
                         }
                       </h4>
 
-                      <p className="text-sm text-gray-400">
+                      <p className="text-sm text-gray-400 truncate">
                         {
                           player.phoneNumber
                         }
@@ -558,7 +563,7 @@ const EditTeam = () => {
                           player._id
                         )
                       }
-                      className="flex items-center justify-center w-10 h-10 ml-auto text-red-400 rounded-xl bg-red-500/10"
+                      className="flex items-center justify-center flex-shrink-0 w-10 h-10 ml-auto text-red-400 rounded-xl bg-red-500/10"
                     >
                       <X
                         size={18}
