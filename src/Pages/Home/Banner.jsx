@@ -19,26 +19,26 @@ const Banner = () => {
           <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
 
           <span className="text-[11px] font-bold tracking-[2px] uppercase text-cyan-300">
-            Tournament Live Now
+            পঞ্চম আসর 
           </span>
         </div>
 
         {/* MAIN TITLE */}
         <div className="space-y-0 leading-none">
 
-          <h2 className="text-white font-extrabold uppercase tracking-tight text-[30px] md:text-[50px] lg:text-[70px]">
-            THE
+          <h2 className="mb-5 text-white font-extrabold uppercase tracking-tight text-[20px] md:text-[30px] lg:text-[40px]">
+            সর্দারবাড়ী
           </h2>
 
-          <h1 className="font-extrabold uppercase tracking-tight text-[70px] md:text-[100px] lg:text-[120px]">
-            <span className="text-cyan-400">ARENA</span>{" "}
+          <h1 className="font-extrabold uppercase tracking-tight text-[50px] md:text-[70px] lg:text-[90px] ">
+            <span className="text-cyan-400">অলিম্পিক</span>{" "}
             <span className="text-transparent bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text">
-              CUP
+              টুর্নামেন্ট
             </span>
           </h1>
 
-          <h2 className="text-white font-extrabold uppercase tracking-tight text-[70px] md:text-[100px] lg:text-[120px]">
-            2026
+          <h2 className="mt-10 text-white font-extrabold uppercase tracking-tight text-[50px] md:text-[80px] lg:text-100px]">
+            ২০২৬
           </h2>
         </div>
 
