@@ -1,64 +1,110 @@
 // Footer.jsx
 import React from "react";
 import { Link } from "react-router-dom";
-import { Instagram, Facebook, Twitter, Mail } from "lucide-react";
+import {
+  Trophy,
+  Instagram,
+  Facebook,
+  Twitter,
+  Mail,
+  Phone,
+  MapPin,
+} from "lucide-react";
 
 export default function Footer() {
   const quickLinks = [
     { name: "Home", path: "/" },
-    { name: "Products", path: "/products" },
-    { name: "About", path: "/about" },
-    { name: "Contact", path: "/contact" },
+    { name: "Matches", path: "/matches" },
+    { name: "Point Table", path: "/pointTable" },
+    { name: "Teams", path: "/teams" },
+    { name: "Players", path: "/players" },
+    { name: "News", path: "/news" },
   ];
 
-  const categories = [
-    { name: "Floral", path: "/products" },
-    { name: "Woody", path: "/products" },
-    { name: "Fresh", path: "/products" },
-    { name: "Oriental", path: "/products" },
+  const usefulLinks = [
+    { name: "Privacy Policy", path: "/privacy-policy" },
+    { name: "Terms & Conditions", path: "/terms-and-conditions" },
+    { name: "Return & Refunds", path: "/return-and-refunds" },
+    { name: "Admin Panel", path: "/dashboard" },
   ];
 
   return (
-    <footer className="pt-20 pb-8 text-white bg-black">
-      <div className="px-6 mx-auto max-w-7xl">
+    <footer className="relative pt-20 pb-8 overflow-hidden text-white border-t border-cyan-500/20 bg-[#071120]">
+
+      {/* BG EFFECT */}
+      <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+        <div className="absolute rounded-full w-72 h-72 bg-cyan-500/10 blur-3xl -top-20 -left-20" />
+        <div className="absolute bottom-0 right-0 rounded-full w-80 h-80 bg-cyan-400/5 blur-3xl" />
+      </div>
+
+      <div className="relative z-10 px-6 mx-auto max-w-7xl">
 
         {/* TOP GRID */}
-        <div className="grid grid-cols-1 gap-12 mb-16 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-12 pb-16 border-b md:grid-cols-2 lg:grid-cols-4 border-cyan-500/10">
 
           {/* BRAND */}
           <div>
-            <h4 className="mb-4 font-serif text-2xl tracking-widest">
-           Demo Footer
-            </h4>
-            <p className="mb-6 text-sm leading-relaxed text-white/50">
-         brings
-              timeless fragrance traditions to the modern world.
+            <Link to="/" className="flex items-center gap-3 mb-5">
+
+              {/* ICON */}
+              <div className="flex items-center justify-center w-11 h-11 rounded-2xl bg-cyan-400/10 border border-cyan-400/20 shadow-[0_0_20px_rgba(34,211,238,0.15)]">
+                <Trophy
+                  size={20}
+                  className="text-cyan-300"
+                  strokeWidth={2.2}
+                />
+              </div>
+
+              {/* TEXT */}
+              <div className="flex items-center text-2xl font-extrabold tracking-wide uppercase">
+                <span className="text-white">SOT</span>
+                <span className="text-cyan-400">2026</span>
+              </div>
+            </Link>
+
+            <p className="max-w-sm text-sm leading-relaxed text-gray-400">
+             সর্দারবাড়ী অলিম্পিক টুর্নামেন্ট (পঞ্চম আসর)
             </p>
 
-            <div className="flex gap-4">
-              <a href="#" className="text-white/60 hover:text-white">
-                <Instagram size={20} />
+            {/* SOCIAL */}
+            <div className="flex gap-4 mt-6">
+
+              <a
+                href="#"
+                className="flex items-center justify-center w-10 h-10 transition-all duration-300 border rounded-xl border-cyan-400/20 bg-cyan-400/10 text-cyan-300 hover:bg-cyan-400/20 hover:shadow-[0_0_20px_rgba(34,211,238,0.2)]"
+              >
+                <Facebook size={18} />
               </a>
-              <a href="#" className="text-white/60 hover:text-white">
-                <Facebook size={20} />
+
+              <a
+                href="#"
+                className="flex items-center justify-center w-10 h-10 transition-all duration-300 border rounded-xl border-cyan-400/20 bg-cyan-400/10 text-cyan-300 hover:bg-cyan-400/20 hover:shadow-[0_0_20px_rgba(34,211,238,0.2)]"
+              >
+                <Instagram size={18} />
               </a>
-              <a href="#" className="text-white/60 hover:text-white">
-                <Twitter size={20} />
+
+              <a
+                href="#"
+                className="flex items-center justify-center w-10 h-10 transition-all duration-300 border rounded-xl border-cyan-400/20 bg-cyan-400/10 text-cyan-300 hover:bg-cyan-400/20 hover:shadow-[0_0_20px_rgba(34,211,238,0.2)]"
+              >
+                <Twitter size={18} />
               </a>
+
             </div>
           </div>
 
           {/* QUICK LINKS */}
           <div>
-            <h5 className="mb-6 text-sm tracking-widest uppercase">
+            <h4 className="mb-6 text-sm font-semibold tracking-[3px] uppercase text-cyan-300">
               Quick Links
-            </h5>
-            <ul className="space-y-3">
+            </h4>
+
+            <ul className="space-y-4">
               {quickLinks.map((link) => (
                 <li key={link.name}>
                   <Link
                     to={link.path}
-                    className="text-sm text-white/50 hover:text-white"
+                    className="inline-block text-sm text-gray-400 transition-all duration-300 hover:text-cyan-300 hover:translate-x-1"
                   >
                     {link.name}
                   </Link>
@@ -67,19 +113,20 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* COLLECTIONS */}
+          {/* USEFUL LINKS */}
           <div>
-            <h5 className="mb-6 text-sm tracking-widest uppercase">
-              Collections
-            </h5>
-            <ul className="space-y-3">
-              {categories.map((cat) => (
-                <li key={cat.name}>
+            <h4 className="mb-6 text-sm font-semibold tracking-[3px] uppercase text-cyan-300">
+              Useful Links
+            </h4>
+
+            <ul className="space-y-4">
+              {usefulLinks.map((link) => (
+                <li key={link.name}>
                   <Link
-                    to={cat.path}
-                    className="text-sm text-white/50 hover:text-white"
+                    to={link.path}
+                    className="inline-block text-sm text-gray-400 transition-all duration-300 hover:text-cyan-300 hover:translate-x-1"
                   >
-                    {cat.name}
+                    {link.name}
                   </Link>
                 </li>
               ))}
@@ -88,42 +135,77 @@ export default function Footer() {
 
           {/* CONTACT */}
           <div>
-            <h5 className="mb-6 text-sm tracking-widest uppercase">
-              Contact
-            </h5>
-            <div className="flex items-center gap-3 text-sm text-white/50">
-              <Mail size={16} />
-             demo@email.com
+            <h4 className="mb-6 text-sm font-semibold tracking-[3px] uppercase text-cyan-300">
+              Contact Developer
+            </h4>
+
+            <div className="space-y-5">
+
+              <div className="flex items-start gap-3">
+                <div className="p-2 border rounded-lg border-cyan-400/20 bg-cyan-400/10">
+                  <Mail size={16} className="text-cyan-300" />
+                </div>
+
+                <div>
+                  <p className="mb-1 text-xs text-gray-500 uppercase">
+                    Email
+                  </p>
+                  <p className="text-sm text-gray-300">
+                    hasanalam365@email.com
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="p-2 border rounded-lg border-cyan-400/20 bg-cyan-400/10">
+                  <Phone size={16} className="text-cyan-300" />
+                </div>
+
+                <div>
+                  <p className="mb-1 text-xs text-gray-500 uppercase">
+                    Phone
+                  </p>
+                  <p className="text-sm text-gray-300">
+                    +880 1645-782626
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="p-2 border rounded-lg border-cyan-400/20 bg-cyan-400/10">
+                  <MapPin size={16} className="text-cyan-300" />
+                </div>
+
+                <div>
+                  <p className="mb-1 text-xs text-gray-500 uppercase">
+                    Location
+                  </p>
+                  <p className="text-sm text-gray-300">
+                    Dhaka, Bangladesh
+                  </p>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
 
-        {/* BOTTOM BAR */}
-        <div className="flex flex-col items-center justify-between gap-4 pt-6 border-t border-white/10 md:flex-row">
-          <p className="text-sm text-white/40">
-            © 2026 Demo. All rights reserved.
+        {/* BOTTOM */}
+        <div className="flex flex-col items-center justify-between gap-4 pt-8 md:flex-row">
+
+          <p className="text-sm text-gray-500">
+            © 2026 ArenaCup. All rights reserved.
           </p>
 
-          <div className="flex gap-4">
-            <Link to="/privacy-policy" className="text-sm text-white/50 hover:text-white">
-              Privacy Policy
-            </Link>
-            <Link to="/terms-and-conditions" className="text-sm text-white/50 hover:text-white">
-              Terms & Conditions
-            </Link>
-            <Link to="/return-and-refunds" className="text-sm text-white/50 hover:text-white">
-              Return & Refunds
-            </Link>
+          <div className="flex items-center gap-2 text-sm text-gray-500">
+            <span>Developed by</span>
+
+            <span className="font-semibold text-cyan-300">
+              Hasan Alam
+            </span>
           </div>
-        </div>
 
-        {/* CREDIT */}
-        <div className="mt-4 text-center">
-          <p className="text-xs text-white/30">
-            Developed by <span className="text-rose-400">Faces Media</span>
-          </p>
         </div>
-
       </div>
     </footer>
   );
