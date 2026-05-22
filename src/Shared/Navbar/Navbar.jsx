@@ -39,8 +39,8 @@ export default function Navbar() {
 
             {/* TEXT */}
             <div className="flex items-center text-xl font-extrabold tracking-wide uppercase">
-              <span className="text-white">Arena</span>
-              <span className="text-cyan-400">Cup</span>
+              <span className="text-white">SOT</span>
+              <span className="text-cyan-400">2026</span>
             </div>
           </Link>
 

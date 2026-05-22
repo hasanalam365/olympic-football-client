@@ -178,7 +178,7 @@ const EditPlayer = () => {
           );
 
           navigate(
-            "/dashboard/adminPlayers"
+            "/dashboard/players"
           );
         }
       } catch (error) {
