@@ -57,7 +57,7 @@ const Banner = () => {
           <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
 
           <span className="text-[11px] font-bold tracking-[2px] uppercase text-cyan-300">
-            পঞ্চম আসর
+            প্রথম আসর
           </span>
         </div>
 
@@ -69,10 +69,10 @@ const Banner = () => {
 
           <h1 className="font-extrabold uppercase tracking-tight text-[50px] md:text-[70px] lg:text-[90px]">
             <span className="text-cyan-400">
-              অলিম্পিক
+              চ্যাম্পিয়ন
             </span>{" "}
             <span className="text-transparent bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text">
-              টুর্নামেন্ট
+              লীগ
             </span>
           </h1>
 
