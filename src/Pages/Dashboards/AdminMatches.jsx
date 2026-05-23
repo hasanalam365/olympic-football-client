@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 const matches = [
   {
@@ -80,12 +81,15 @@ const AdminMatches = () => {
         </div>
 
         {/* ADD BUTTON */}
-        <button className="flex items-center justify-center gap-3 px-6 text-sm font-bold text-black transition-all duration-300 h-14 rounded-2xl bg-cyan-300 hover:scale-[1.03] hover:shadow-[0_0_30px_rgba(103,232,249,0.35)]">
+       <Link to="/dashboard/addMatch">
 
-          <Plus size={18} />
+  <button className="flex items-center justify-center gap-3 px-6 text-sm font-bold text-black transition-all duration-300 h-14 rounded-2xl bg-cyan-300 hover:scale-[1.03] hover:shadow-[0_0_30px_rgba(103,232,249,0.35)]">
 
-          Add Match
-        </button>
+    <Plus size={18} />
+
+    Add Match
+  </button>
+</Link>
       </div>
 
       {/* MATCHES */}

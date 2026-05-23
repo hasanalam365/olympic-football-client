@@ -15,6 +15,7 @@ import AddTeam from "../../Components/AddTeam";
 import AddPlayer from "../../Components/AddPlayer";
 import EditTeam from "../../Components/EditTeam";
 import EditPlayer from "../../Components/EditPlayer";
+import AddMatch from "../../Components/AddMatch";
 
 
 
@@ -84,6 +85,11 @@ export const router = createBrowserRouter([
 {
     path: "/dashboard/editPlayer/:id",
     element: <EditPlayer/>
+},
+
+{
+  path: "/dashboard/addMatch",
+  element: <AddMatch />,
 }
            
         ]
