@@ -106,7 +106,7 @@ const AddMatch = () => {
         formData.awayTeam
       ) {
         return toast.error(
-          "Same team select kora jabe na"
+          "দুটো একই দল সিলেক্ট করেছেন!"
         );
       }
 
@@ -116,6 +116,7 @@ const AddMatch = () => {
         homeScore: 0,
 
         awayScore: 0,
+        
 
         status:
           "scheduled",
@@ -167,7 +168,7 @@ const AddMatch = () => {
           </div>
 
           <Link
-            to="/dashboard/adminMatches"
+            to="/dashboard/matches"
             className="flex items-center justify-center gap-2 px-5 text-sm font-semibold transition-all duration-300 border h-12 rounded-2xl border-white/10 bg-[#071120] hover:border-cyan-400/30 hover:text-cyan-300"
           >
             <ArrowLeft size={18} />
