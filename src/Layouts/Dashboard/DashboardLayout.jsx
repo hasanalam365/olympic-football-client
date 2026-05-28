@@ -27,6 +27,11 @@ const sidebarLinks = [
     path: "/dashboard/matches",
     icon: Swords,
   },
+  {
+    name: "Next Match",
+    path: "/dashboard/next-match",
+    icon: Swords,
+  },
 
   {
     name: "Teams",

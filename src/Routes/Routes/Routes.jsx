@@ -17,6 +17,7 @@ import EditTeam from "../../Components/EditTeam";
 import EditPlayer from "../../Components/EditPlayer";
 import AddMatch from "../../Components/AddMatch";
 import EditMatch from "../../Components/EditMatch";
+import AdminUpMatch from "../../Pages/Dashboards/AdminUpMatch";
 
 
 
@@ -95,7 +96,11 @@ export const router = createBrowserRouter([
 {
  path: "/dashboard/editMatch/:id",
   element:<EditMatch />
-}
+},
+{
+ path: "/dashboard/next-match",
+  element:<AdminUpMatch/>
+},
            
         ]
     }
