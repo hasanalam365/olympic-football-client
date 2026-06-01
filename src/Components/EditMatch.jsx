@@ -118,7 +118,7 @@ const EditMatch = () => {
         );
 
         navigate(
-          "/dashboard/adminMatches"
+          "dashboard/matches"
         );
       },
 
@@ -134,6 +134,8 @@ const EditMatch = () => {
   ========================================= */
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    
 
     updateMutation.mutate(
       formData

@@ -19,7 +19,7 @@ import AddMatch from "../../Components/AddMatch";
 import EditMatch from "../../Components/EditMatch";
 import AdminUpMatch from "../../Pages/Dashboards/AdminUpMatch";
 import Login from "../../Pages/Login/Login";
-import Register from "../../Pages/Register/Register";
+// import Register from "../../Pages/Register/Register";
 import PrivateRoute from "../PrivateRoute/PrivateRoute";
 import News from "../../Pages/News/News";
 import Players from "../../Pages/Players/Players";
@@ -61,10 +61,10 @@ export const router = createBrowserRouter([
   element: <Login />,
 },
 
-{
-  path: "/register",
-  element: <Register />,
-},
+// {
+//   path: "/register",
+//   element: <Register />,
+// },
 {
   path: "/news",
   element: <News />,

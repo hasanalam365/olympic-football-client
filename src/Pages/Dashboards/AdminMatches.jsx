@@ -317,7 +317,7 @@ const handleDelete = (
                         `/dashboard/editMatch/${match._id}`
                       )
                     }
-                    className="flex items-center justify-center w-11 h-11 rounded-xl border border-white/10 bg-[#0B1627] transition-all duration-300 hover:border-cyan-400/30 hover:text-cyan-300"
+                    className="flex z-50 items-center justify-center w-11 h-11 rounded-xl border border-white/10 bg-[#0B1627] transition-all duration-300 hover:border-cyan-400/30 hover:text-cyan-300"
                   >
 
                     <Pencil size={17} />
