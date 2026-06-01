@@ -23,6 +23,7 @@ import Register from "../../Pages/Register/Register";
 import PrivateRoute from "../PrivateRoute/PrivateRoute";
 import News from "../../Pages/News/News";
 import Players from "../../Pages/Players/Players";
+import LiveMatch from "../../Pages/Dashboards/LiveMatch";
 
 
 
@@ -68,6 +69,7 @@ export const router = createBrowserRouter([
   path: "/news",
   element: <News />,
 },
+
 
           
            
@@ -126,6 +128,10 @@ export const router = createBrowserRouter([
  path: "/dashboard/next-match",
   element:<AdminUpMatch/>
 },
+{
+  path: "/dashboard/live-match/:id",
+  element: <LiveMatch />,
+}
            
         ]
     }

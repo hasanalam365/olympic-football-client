@@ -5,12 +5,19 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import {
+  Radio,
+} from "lucide-react";
+
+import {
+  useNavigate,
+} from "react-router-dom";
 
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
 
 const AdminUpMatch = () => {
-  const axiosPublic =
-    useAxiosPublic();
+  const navigate = useNavigate();
+  const axiosPublic =useAxiosPublic();
 
   const queryClient =
     useQueryClient();
@@ -31,6 +38,8 @@ const AdminUpMatch = () => {
       return res.data;
     },
   });
+
+
 
   /* UPDATE UPCOMING */
   const upcomingMutation =
@@ -62,6 +71,32 @@ const AdminUpMatch = () => {
         );
       },
     });
+
+const handleLive =
+  async (
+    match
+  ) => {
+    try {
+      const res =
+        await axiosPublic.post(
+          "/live-match/start",
+          {
+            matchId:
+              match._id,
+          }
+        );
+
+      navigate(
+        `/dashboard/live-match/${res.data.insertedId}`
+      );
+    } catch (
+      error
+    ) {
+      console.log(
+        error
+      );
+    }
+  };
 
   if (isLoading) {
     return (
@@ -122,22 +157,40 @@ const AdminUpMatch = () => {
                 </p>
               </div>
 
-              <button
-                onClick={() =>
-                  upcomingMutation.mutate(
-                    match
-                  )
-                }
-                className={`px-5 py-2 rounded-xl font-semibold transition-all duration-300 ${
-                  match.isUpcoming
-                    ? "bg-cyan-400 text-black"
-                    : "bg-white/10 text-white"
-                }`}
-              >
-                {match.isUpcoming
-                  ? "Selected"
-                  : "Select"}
-              </button>
+              
+              <div className="flex gap-2">
+
+  <button
+    onClick={() =>
+      upcomingMutation.mutate(
+        match
+      )
+    }
+    className={`px-5 py-2 rounded-xl font-semibold ${
+      match.isUpcoming
+        ? "bg-cyan-400 text-black"
+        : "bg-white/10 text-white"
+    }`}
+  >
+    {match.isUpcoming
+      ? "Selected"
+      : "Select"}
+  </button>
+
+  <button
+    onClick={() =>
+      handleLive(
+        match
+      )
+    }
+    className="px-5 py-2 text-white bg-red-500 rounded-xl"
+  >
+    <Radio
+      size={16}
+    />
+  </button>
+
+</div>
             </div>
           )
         )}
