@@ -82,7 +82,14 @@ const LiveMatch = () => {
       liveMatch.status ||
         "Not Started"
     );
+  }
+}, [liveMatch]);
 
+useEffect(() => {
+  if (
+    liveMatch &&
+    seconds === 0
+  ) {
     setSeconds(
       liveMatch.timerSeconds || 0
     );
@@ -91,7 +98,7 @@ const LiveMatch = () => {
       liveMatch.isRunning || false
     );
   }
-}, [liveMatch]);
+}, [liveMatch?._id]);
 
 const {
   data: homeTeamData,

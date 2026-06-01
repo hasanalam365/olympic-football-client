@@ -99,13 +99,47 @@ const Banner = () => {
     liveMatch.status ===
       "LIVE";
 
-  const liveMinute =
-    Math.floor(
-      Number(
-        liveMatch?.timerSeconds ||
-          0
-      ) / 60
+ const [displaySeconds, setDisplaySeconds] =
+  useState(0);
+
+useEffect(() => {
+  if (liveMatch?.timerSeconds >= 0) {
+    setDisplaySeconds(
+      liveMatch.timerSeconds
     );
+  }
+}, [liveMatch]);
+
+useEffect(() => {
+  if (
+    !hasLiveMatch ||
+    !liveMatch?.isRunning
+  )
+    return;
+
+  const interval =
+    setInterval(() => {
+      setDisplaySeconds(
+        (prev) => prev + 1
+      );
+    }, 1000);
+
+  return () =>
+    clearInterval(
+      interval
+    );
+}, [
+  hasLiveMatch,
+  liveMatch?.isRunning,
+]);
+
+const liveMinute =
+  Math.floor(
+    displaySeconds / 60
+  );
+
+const liveSecond =
+  displaySeconds % 60;
 
   return (
     <section className="relative flex items-center justify-center py-20 overflow-hidden bg-[#030B18]">
@@ -254,9 +288,17 @@ const Banner = () => {
                     VS
                   </h2>
 
-                  <div className="mt-3 text-xl font-bold text-cyan-300">
-                    {liveMinute}'
-                  </div>
+                  {/* <div className="mt-3 text-xl font-bold text-cyan-300">
+  {String(liveMinute).padStart(
+    2,
+    "0"
+  )}
+  :
+  {String(liveSecond).padStart(
+    2,
+    "0"
+  )}
+</div> */}
 
                 </div>
 
