@@ -21,6 +21,8 @@ import AdminUpMatch from "../../Pages/Dashboards/AdminUpMatch";
 import Login from "../../Pages/Login/Login";
 import Register from "../../Pages/Register/Register";
 import PrivateRoute from "../PrivateRoute/PrivateRoute";
+import News from "../../Pages/News/News";
+import Players from "../../Pages/Players/Players";
 
 
 
@@ -50,6 +52,10 @@ export const router = createBrowserRouter([
                 element: <Teams/>
             },
             {
+                path: '/players',
+                element: <Players/>
+            },
+            {
   path: "/login",
   element: <Login />,
 },
@@ -57,6 +63,10 @@ export const router = createBrowserRouter([
 {
   path: "/register",
   element: <Register />,
+},
+{
+  path: "/news",
+  element: <News />,
 },
 
           

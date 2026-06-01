@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
+import { Link } from "react-router-dom";
 
 const Banner = () => {
   const axiosPublic =
@@ -98,13 +99,13 @@ const Banner = () => {
             Live Matches
           </button>
 
-          <button className="flex items-center gap-3 px-8 py-4 text-sm font-semibold text-white transition-all duration-300 border rounded-xl border-white/10 bg-white/5 hover:bg-white/10">
+          <Link to={"/matches"} className="flex items-center gap-3 px-8 py-4 text-sm font-semibold text-white transition-all duration-300 border rounded-xl border-white/10 bg-white/5 hover:bg-white/10">
             <CalendarDays
               size={18}
             />
 
             View Schedule
-          </button>
+          </Link>
         </div>
 
         {/* LIVE SCORE CARD */}
