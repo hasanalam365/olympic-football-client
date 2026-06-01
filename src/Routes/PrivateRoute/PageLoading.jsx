@@ -1,54 +1,107 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { ShoppingBag } from "lucide-react";
+import { Trophy } from "lucide-react";
 
-export default function PageLoader() {
+const PageLoader = () => {
   return (
-    <div className="relative flex items-center justify-center min-h-screen overflow-hidden text-white bg-black">
+    <div className="relative flex items-center justify-center min-h-screen overflow-hidden bg-[#06131F]">
 
-      {/* Background Glow Effects */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 w-full h-px -translate-x-1/2 left-1/2 bg-gradient-to-r from-transparent via-rose-400/50 to-transparent" />
-        <div className="absolute rounded-full top-10 left-1/4 w-96 h-96 bg-rose-500/10 blur-3xl animate-pulse" />
-        <div className="absolute delay-300 rounded-full top-10 right-1/4 w-80 h-80 bg-amber-500/10 blur-3xl animate-pulse" />
+      {/* Stadium Lights */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute w-64 h-64 rounded-full top-10 left-10 bg-emerald-500/10 blur-3xl animate-pulse" />
+        <div className="absolute w-64 h-64 rounded-full bottom-10 right-10 bg-yellow-500/10 blur-3xl animate-pulse" />
+
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
       </div>
 
-      {/* Loader Content */}
       <div className="relative z-10 flex flex-col items-center">
 
-        {/* Spinning Glow Ring */}
+        {/* Rotating Ring */}
         <motion.div
-          initial={{ rotate: 0 }}
           animate={{ rotate: 360 }}
-          transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-          className="relative border-4 rounded-full w-28 h-28 border-t-rose-500/60 border-l-amber-400/50 border-r-transparent border-b-transparent"
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          className="border-4 rounded-full w-36 h-36 border-white/10 border-t-yellow-400 border-r-emerald-400"
         />
 
-        {/* ShoppingBag Icon (Centered & Fixed) */}
-        <div className="absolute flex items-center justify-center w-28 h-28">
-          <ShoppingBag className="w-10 h-10 text-white" />
-        </div>
-
-        {/* Brand Text */}
-        <motion.p
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.8 }}
-          className="mt-10 text-2xl font-serif tracking-[0.25em] text-white/90"
+        {/* Football */}
+        <motion.div
+          animate={{
+            y: [0, -12, 0],
+          }}
+          transition={{
+            duration: 1,
+            repeat: Infinity,
+          }}
+          className="absolute text-5xl"
         >
-          Arabian Essense
-        </motion.p>
+          ⚽
+        </motion.div>
 
-        {/* Sub-text glow */}
-        <motion.p
+        {/* Trophy */}
+        <motion.div
+          animate={{
+            scale: [1, 1.15, 1],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+          }}
+          className="absolute -top-12"
+        >
+          <Trophy
+            size={30}
+            className="text-yellow-400"
+          />
+        </motion.div>
+
+        {/* Tournament Name */}
+        <motion.h2
           initial={{ opacity: 0 }}
-          animate={{ opacity: 0.8 }}
-          transition={{ delay: 1.2, duration: 1.5, repeat: Infinity, repeatType: "reverse" }}
-          className="mt-2 text-xs uppercase tracking-[0.35em] text-amber-300/70"
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+          className="mt-12 text-3xl font-bold tracking-widest text-white uppercase"
         >
-         YEMEN 1878
+          Olympic Tournament
+        </motion.h2>
+
+        {/* Loading Text */}
+        <motion.p
+          animate={{
+            opacity: [0.3, 1, 0.3],
+          }}
+          transition={{
+            duration: 1.5,
+            repeat: Infinity,
+          }}
+          className="mt-3 text-sm tracking-[0.4em] text-emerald-400 uppercase"
+        >
+          Loading......
         </motion.p>
+
+        {/* Dots */}
+        <div className="flex gap-2 mt-8">
+          {[0, 1, 2].map((dot) => (
+            <motion.div
+              key={dot}
+              animate={{
+                y: [0, -10, 0],
+              }}
+              transition={{
+                duration: 0.7,
+                repeat: Infinity,
+                delay: dot * 0.2,
+              }}
+              className="w-3 h-3 bg-yellow-400 rounded-full"
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
-}
+};
+
+export default PageLoader;

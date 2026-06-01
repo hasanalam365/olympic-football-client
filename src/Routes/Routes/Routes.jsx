@@ -18,6 +18,9 @@ import EditPlayer from "../../Components/EditPlayer";
 import AddMatch from "../../Components/AddMatch";
 import EditMatch from "../../Components/EditMatch";
 import AdminUpMatch from "../../Pages/Dashboards/AdminUpMatch";
+import Login from "../../Pages/Login/Login";
+import Register from "../../Pages/Register/Register";
+import PrivateRoute from "../PrivateRoute/PrivateRoute";
 
 
 
@@ -46,6 +49,16 @@ export const router = createBrowserRouter([
                 path: '/teams',
                 element: <Teams/>
             },
+            {
+  path: "/login",
+  element: <Login />,
+},
+
+{
+  path: "/register",
+  element: <Register />,
+},
+
           
            
         ]
@@ -53,7 +66,9 @@ export const router = createBrowserRouter([
     {
         path: '/dashboard',
         element: 
-            <DashboardLayout></DashboardLayout>,
+           <PrivateRoute>
+             <DashboardLayout></DashboardLayout>
+           </PrivateRoute>,
         
         children:[
             {
