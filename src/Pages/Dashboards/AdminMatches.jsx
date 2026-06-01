@@ -61,47 +61,65 @@ const AdminMatches = () => {
   /* =========================================
      DELETE MATCH
   ========================================= */
-  const deleteMutation =
-    useMutation({
-      mutationFn: async (id) => {
-        const res =
-          await axiosPublic.delete(
-            `/matches/${id}`
-          );
+ const deleteMutation =
+  useMutation({
+    mutationFn: async (id) => {
+      const res =
+        await axiosPublic.delete(
+          `/matches/${id}`
+        );
 
-        return res.data;
-      },
+      return res.data;
+    },
 
-      onSuccess: () => {
+    onSuccess: (data) => {
+      if (
+        data.deletedCount > 0
+      ) {
         toast.success(
           "Match deleted successfully"
         );
 
-        queryClient.invalidateQueries(
-          ["matches"]
-        );
-      },
-
-      onError: () => {
+        queryClient.invalidateQueries({
+          queryKey: [
+            "matches",
+          ],
+        });
+      } else {
         toast.error(
-          "Failed to delete match"
+          "Match not found"
         );
-      },
-    });
+      }
+    },
+
+    onError: (error) => {
+      console.log(error);
+
+      toast.error(
+        "Failed to delete match"
+      );
+    },
+  });
 
   /* =========================================
      HANDLE DELETE
   ========================================= */
-  const handleDelete = (id) => {
-    const confirmDelete =
-      window.confirm(
-        "Are you sure you want to delete this match?"
-      );
+const handleDelete = (
+  id
+) => {
+  const confirmDelete =
+    window.confirm(
+      "Are you sure you want to permanently delete this match?"
+    );
 
-    if (confirmDelete) {
-      deleteMutation.mutate(id);
-    }
-  };
+  if (
+    !confirmDelete
+  ) {
+    return;
+  }
+
+  deleteMutation.mutate(id);
+};
 
   /* =========================================
      LOADING
@@ -306,17 +324,19 @@ const AdminMatches = () => {
                   </button>
 
                   {/* DELETE */}
-                  <button
-                    onClick={() =>
-                      handleDelete(
-                        match._id
-                      )
-                    }
-                    className="flex items-center justify-center w-11 h-11 rounded-xl border border-white/10 bg-[#0B1627] transition-all duration-300 hover:border-red-500/30 hover:text-red-400"
-                  >
-
-                    <Trash2 size={17} />
-                  </button>
+                 <button
+  onClick={() =>
+    handleDelete(
+      match._id
+    )
+  }
+  disabled={
+    deleteMutation.isPending
+  }
+  className="flex z-50 items-center justify-center w-11 h-11 rounded-xl border border-white/10 bg-[#0B1627] transition-all duration-300 hover:border-red-500/30 hover:text-red-400 disabled:opacity-50"
+>
+  <Trash2 size={17} />
+</button>
                 </div>
               </div>
             </motion.div>
