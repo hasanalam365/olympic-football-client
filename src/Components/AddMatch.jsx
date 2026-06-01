@@ -120,6 +120,8 @@ const AddMatch = () => {
 
         status:
           "scheduled",
+          isResult: false,
+          isLive: false
       };
 
       try {
