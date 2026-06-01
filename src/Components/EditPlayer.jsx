@@ -23,6 +23,18 @@ import useAxiosPublic from "../Hooks/useAxiosPublic";
 
 import { toast } from "react-toastify";
 
+const teams = [
+  "সর্দারবাড়ী কিংস",
+  "সর্দারবাড়ী প্রবাসী একাদশ",
+  "কুটুম বাড়ী একাদশ",
+  "আরাফ একাদশ",
+  "বিদ্রোহী একাদশ",
+  "রাইসা এন্টারপ্রাইজ",
+  "হা-মীম নাইন স্টার",
+  "এক্সপার্ট পয়েন্ট ক্লাব",
+];
+
+
 const EditPlayer = () => {
   const { id } =
     useParams();
@@ -121,47 +133,55 @@ const EditPlayer = () => {
         /* =========================
             UPDATED PLAYER
         ========================= */
-        const updatedPlayer =
-          {
-            name:
-              form.name.value,
+       const updatedPlayer = {
+  name:
+    form.name.value,
 
-            age: Number(
-              form.age.value
-            ),
+  age: Number(
+    form.age.value
+  ),
 
-            phoneNumber:
-              form.phoneNumber
-                .value,
+  phoneNumber:
+    form.phoneNumber.value,
 
-            bloodGroup:
-              form.bloodGroup
-                .value,
+  bloodGroup:
+    form.bloodGroup.value,
 
-            totalGoals:
-              Number(
-                form.totalGoals
-                  .value
-              ),
+  totalGoals: Number(
+    form.totalGoals.value
+  ),
 
-            yellowCards:
-              Number(
-                form.yellowCards
-                  .value
-              ),
+  yellowCards: Number(
+    form.yellowCards.value
+  ),
 
-            redCards:
-              Number(
-                form.redCards
-                  .value
-              ),
+  redCards: Number(
+    form.redCards.value
+  ),
 
-            match: Number(
-              form.match.value
-            ),
+  match: Number(
+    form.match.value
+  ),
 
-            photo: photoUrl,
-          };
+  photo: photoUrl,
+
+  teamMembers: [
+    {
+      teamName:
+        form.teamName.value,
+
+      year: 2026,
+
+      goals: Number(
+        form.totalGoals.value
+      ),
+
+      match: Number(
+        form.match.value
+      ),
+    },
+  ],
+};
 
         const res =
           await axiosPublic.patch(
@@ -352,6 +372,33 @@ const EditPlayer = () => {
                       </option>
                     </select>
                   </div>
+                  <div>
+  <label className="block mb-2 text-sm text-gray-300">
+    Team
+  </label>
+
+  <select
+    name="teamName"
+    defaultValue={
+      player?.teamMembers?.[0]
+        ?.teamName || ""
+    }
+    className="w-full h-14 px-4 rounded-2xl border border-white/10 bg-[#0B1627]"
+  >
+    <option value="">
+      Select Team
+    </option>
+
+    {teams.map((team) => (
+      <option
+        key={team}
+        value={team}
+      >
+        {team}
+      </option>
+    ))}
+  </select>
+</div>
                 </div>
               </div>
 
