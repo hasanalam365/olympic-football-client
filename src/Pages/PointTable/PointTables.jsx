@@ -1,5 +1,3 @@
-// PointTables.jsx
-
 import React, {
   useEffect,
   useMemo,
@@ -23,7 +21,6 @@ const PointTables = () => {
   const [activeTab, setActiveTab] =
     useState("All Groups");
 
-  // GET TEAMS
   useEffect(() => {
     const getTeams = async () => {
       try {
@@ -43,7 +40,6 @@ const PointTables = () => {
     getTeams();
   }, [axiosPublic]);
 
-  // GROUPED DATA
   const groupedTeams =
     useMemo(() => {
       const grouped = {};
@@ -53,76 +49,104 @@ const PointTables = () => {
           team.group ||
           "No Group";
 
-        if (!grouped[groupName]) {
-          grouped[groupName] = [];
+        if (
+          !grouped[groupName]
+        ) {
+          grouped[groupName] =
+            [];
         }
 
         grouped[groupName].push({
           ...team,
 
-          played:
-            team.played || 0,
+          match:
+            Number(
+              team.match
+            ) || 0,
 
           win:
-            team.win || 0,
+            Number(
+              team.win
+            ) || 0,
 
           draw:
-            team.draw || 0,
+            Number(
+              team.draw
+            ) || 0,
 
           lose:
-            team.lose || 0,
+            Number(
+              team.lose
+            ) || 0,
 
-          gf:
-            team.gf || 0,
-
-          ga:
-            team.ga || 0,
-
-          gd:
-            (team.gf || 0) -
-            (team.ga || 0),
+          totalGoals:
+            Number(
+              team.totalGoals
+            ) || 0,
 
           points:
-            team.points || 0,
+            Number(
+              team.points
+            ) || 0,
         });
       });
 
-      // SORT
-      Object.keys(grouped).forEach(
-        (group) => {
-          grouped[group].sort(
-            (a, b) => {
-              if (
-                b.points !==
-                a.points
-              ) {
-                return (
-                  b.points -
-                  a.points
-                );
-              }
-
+      Object.keys(
+        grouped
+      ).forEach((group) => {
+        grouped[group].sort(
+          (a, b) => {
+            if (
+              b.points !==
+              a.points
+            ) {
               return (
-                b.gd - a.gd
+                b.points -
+                a.points
               );
             }
-          );
-        }
-      );
+
+            if (
+              b.win !==
+              a.win
+            ) {
+              return (
+                b.win -
+                a.win
+              );
+            }
+
+            if (
+              b.totalGoals !==
+              a.totalGoals
+            ) {
+              return (
+                b.totalGoals -
+                a.totalGoals
+              );
+            }
+
+            return 0;
+          }
+        );
+      });
 
       return grouped;
     }, [teams]);
 
   const tabs = [
     "All Groups",
-    ...Object.keys(groupedTeams),
+    ...Object.keys(
+      groupedTeams
+    ),
   ];
 
   if (loading) {
     return (
       <section className="min-h-screen bg-[#030B18] flex items-center justify-center">
         <h2 className="text-2xl font-bold text-white">
-          Loading Point Table...
+          Loading Point
+          Table...
         </h2>
       </section>
     );
@@ -138,14 +162,15 @@ const PointTables = () => {
           </h2>
 
           <p className="mt-3 text-sm text-gray-400 md:text-base">
-            Group stage standings
+            Group Stage
+            Standings
           </p>
 
           <div className="w-14 h-[2px] mt-5 rounded-full bg-cyan-400" />
         </div>
 
         {/* FILTERS */}
-        <div className="flex flex-wrap items-center gap-3 mb-10">
+        <div className="flex flex-wrap gap-3 mb-10">
           {tabs.map((tab) => (
             <button
               key={tab}
@@ -187,14 +212,14 @@ const PointTables = () => {
                 key={groupName}
                 initial={{
                   opacity: 0,
-                  y: 40,
+                  y: 30,
                 }}
                 whileInView={{
                   opacity: 1,
                   y: 0,
                 }}
                 transition={{
-                  duration: 0.5,
+                  duration: 0.4,
                   delay:
                     groupIndex *
                     0.1,
@@ -202,7 +227,7 @@ const PointTables = () => {
                 viewport={{
                   once: true,
                 }}
-                className="overflow-hidden border rounded-3xl border-cyan-400/10 bg-[#071120]"
+                className="overflow-hidden rounded-3xl border border-cyan-400/10 bg-[#071120]"
               >
                 {/* GROUP TITLE */}
                 <div className="px-6 py-5 border-b border-white/10">
@@ -214,7 +239,6 @@ const PointTables = () => {
                 {/* TABLE */}
                 <div className="overflow-x-auto">
                   <table className="w-full min-w-[900px]">
-                    {/* HEAD */}
                     <thead className="border-b border-white/10">
                       <tr className="text-xs uppercase tracking-[2px] text-gray-500">
                         <th className="px-6 py-5 text-left">
@@ -245,17 +269,14 @@ const PointTables = () => {
                           Goals
                         </th>
 
-                       
-
                         <th className="px-4 py-5 text-center">
                           PTS
                         </th>
                       </tr>
                     </thead>
 
-                    {/* BODY */}
                     <tbody>
-                      {teams.map(
+                      {teams?.map(
                         (
                           team,
                           index
@@ -267,15 +288,29 @@ const PointTables = () => {
                             className="transition-all duration-300 border-b border-white/5 hover:bg-cyan-400/5"
                           >
                             {/* POSITION */}
-                            <td className="px-6 py-5 text-sm font-semibold text-white">
-                              {index +
-                                1}
+                            <td className="px-6 py-5">
+                              <span
+                                className={`w-8 h-8 flex items-center justify-center rounded-full font-bold ${
+                                  index ===
+                                  0
+                                    ? "bg-yellow-500 text-black"
+                                    : index ===
+                                      1
+                                    ? "bg-gray-300 text-black"
+                                    : index ===
+                                      2
+                                    ? "bg-orange-500 text-black"
+                                    : "bg-white/10 text-white"
+                                }`}
+                              >
+                                {index +
+                                  1}
+                              </span>
                             </td>
 
                             {/* TEAM */}
                             <td className="px-6 py-5">
                               <div className="flex items-center gap-4">
-                                {/* LOGO */}
                                 {team.logo ? (
                                   <img
                                     src={
@@ -287,8 +322,10 @@ const PointTables = () => {
                                     className="object-cover border rounded-full w-11 h-11 border-white/10"
                                   />
                                 ) : (
-                                  <div className="flex items-center justify-center w-11 h-11 text-[11px] font-bold text-gray-300 rounded-full bg-white/10">
-                                    {team.shortName}
+                                  <div className="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center text-[11px] font-bold text-gray-300">
+                                    {
+                                      team.shortName
+                                    }
                                   </div>
                                 )}
 
@@ -309,10 +346,9 @@ const PointTables = () => {
                               </div>
                             </td>
 
-                            {/* STATS */}
-                            <td className="px-4 py-5 font-medium text-center text-white">
+                            <td className="px-4 py-5 text-center text-white">
                               {
-                                team.played
+                                team.match
                               }
                             </td>
 
@@ -322,7 +358,7 @@ const PointTables = () => {
                               }
                             </td>
 
-                            <td className="px-4 py-5 font-bold text-center text-white">
+                            <td className="px-4 py-5 font-bold text-center text-yellow-400">
                               {
                                 team.draw
                               }
@@ -334,15 +370,11 @@ const PointTables = () => {
                               }
                             </td>
 
-                            <td className="px-4 py-5 font-medium text-center text-white">
+                            <td className="px-4 py-5 text-center text-white">
                               {
-                                team.gf
+                                team.totalGoals
                               }
                             </td>
-
-                         
-
-                          
 
                             <td className="px-4 py-5 font-extrabold text-center text-cyan-300">
                               {
